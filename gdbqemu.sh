@@ -1,0 +1,1 @@
+qemu-system-arm -M vexpress-a9 -m 512M -no-reboot -nographic  -serial mon:stdio -kernel zig-out/bin/zig-qemu-vexpress-a9.elf -s -S
