@@ -7,9 +7,8 @@ pub fn build(b: *std.build.Builder) void {
     // for restricting supported target set are available.
     // const target = b.standardTargetOptions(.{});
 
-    // Target STM32F407VG
     const target = .{
-        .cpu_arch = std.Target.Cpu.Arch.arm,
+        .cpu_arch = std.Target.Cpu.Arch.thumb,
         .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_a9 },
         .os_tag = std.Target.Os.Tag.freestanding,
         .abi = std.Target.Abi.eabi,
@@ -17,22 +16,20 @@ pub fn build(b: *std.build.Builder) void {
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
+    b.setPreferredReleaseMode(std.builtin.Mode.Debug);
     const mode = b.standardReleaseOptions();
-
     const elf = b.addExecutable("zig-qemu-vexpress-a9.elf", "src/startup.zig");
     elf.setTarget(target);
     elf.setBuildMode(mode);
     elf.install();
 
-    const vector_obj = b.addObject("vector", "src/vector.zig");
-    vector_obj.setTarget(target);
-    vector_obj.setBuildMode(mode);
     // add other files
+    elf.addAssemblyFileSource(.{ .path = "src/startup.s" });
 
-    elf.addObject(vector_obj);
-    // elf.addCSourceFile("src/uart.c", &[_][]const u8{"-std=c99"});
     // add linker script
     elf.setLinkerScriptPath(.{ .path = "src/link.ld" });
+
+    // std.debug.print("mode:{}\n", .{mode});
 
     const run_cmd = elf.run();
     run_cmd.step.dependOn(b.getInstallStep());

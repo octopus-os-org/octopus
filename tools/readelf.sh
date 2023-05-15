@@ -1,0 +1,1 @@
+arm-none-eabi-readelf.exe zig-out/bin/zig-qemu-vexpress-a9.elf -a > readelf.out

@@ -1,0 +1,1 @@
+arm-none-eabi-size.exe zig-out/bin/zig-qemu-vexpress-a9.elf 
