@@ -1,1 +1,1 @@
-arm-none-eabi-objdump.exe zig-out/bin/zig-qemu-vexpress-a9.elf -D > objdump.out
+arm-none-eabi-objdump.exe zig-out/bin/zig-armfly-stm32-v6.elf -D > objdump.out

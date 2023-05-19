@@ -1,1 +1,1 @@
-arm-none-eabi-size.exe zig-out/bin/zig-qemu-vexpress-a9.elf 
+arm-none-eabi-size.exe zig-out/bin/zig-armfly-stm32-v6.elf 

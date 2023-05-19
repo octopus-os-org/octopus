@@ -1,1 +1,1 @@
-qemu-system-arm -M vexpress-a9 -m 512M -no-reboot -nographic  -serial mon:stdio -kernel zig-out/bin/zig-qemu-vexpress-a9.elf
+qemu-system-arm -M netduinoplus2 -kernel zig-out/bin/zig-armfly-stm32-v6.bin -serial mon:stdio -nographic

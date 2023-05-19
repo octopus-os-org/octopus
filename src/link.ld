@@ -25,8 +25,12 @@
 /* Define memory regions. */
 MEMORY
 {
-  ROM (rx)  : ORIGIN = 0x60010000, LENGTH = 1M
-  RAM (rwx) : ORIGIN = 0x70000000, LENGTH = 32M
+  /* ROM (rx)  : ORIGIN = 0x8000000, LENGTH = 2048K
+  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
+  CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K */
+  ROM (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
+  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+  CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K
 }
 
 /* Define the entry point of the output file. */
@@ -40,6 +44,7 @@ SECTIONS
     KEEP(*(.text.vector_table)); /* Vector table and pretect this section from removing (the optmization will remove unrefered code) */
     *(.text)  /* Program code */
     *(.text*)  /* Program code */
+    *(.rodata)  /* Read-only data */
     *(.rodata*)  /* Read-only data */
     . = ALIGN(4);
   } >ROM
@@ -48,8 +53,8 @@ SECTIONS
   .data : {
     . = ALIGN(4);
     _data_start = .;
-    *(.data)  /* Read-write initialized data */
-    *(.data*)  /* Read-write initialized data */
+    *(.data)  /* Read-write non-zero initialized data */
+    *(.data*)  /* Read-write non-zero initialized data */
     . = ALIGN(4);
     _data_end = .;
   } >RAM AT>ROM
@@ -57,23 +62,14 @@ SECTIONS
   .bss : {
     . = ALIGN(4);
     _bss_start = .;
-    *(.bss*)
+    *(.bss) /* Read-write zero initialized data */
+    *(.bss*) /* Read-write zero initialized data */
     . = ALIGN(4);
     _bss_end = .;
   } > RAM 
 
-  _fiq_stack_start = ADDR(.bss) + SIZEOF(.bss);
-  _fiq_stack_end = _fiq_stack_start + 0x1000; /* 64 KB */
-
-  _irq_stack_start = _fiq_stack_end;
-  _irq_stack_end = _irq_stack_start + 0x1000; /* 64 KB */
-
-  _stack_start = _irq_stack_end;
-  _stack_end = _stack_start + 0x1000; /* 64 KB */
-
-  _irq_stack_size = _irq_stack_end - _irq_stack_start;
-  _fiq_stack_size = _fiq_stack_end - _fiq_stack_start;
-
+  /* _stack_start = ADDR(.bss) + SIZEOF(.bss); */
+  /* _stack_end = _stack_start + 0x1000; 64KB */
 }
 
-PROVIDE(_stack = ORIGIN(RAM) + LENGTH(RAM));
+PROVIDE(_stack_end = ORIGIN(RAM) + LENGTH(RAM));

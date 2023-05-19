@@ -9,16 +9,16 @@ pub fn build(b: *std.build.Builder) void {
 
     const target = .{
         .cpu_arch = std.Target.Cpu.Arch.thumb,
-        .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_a9 },
+        .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m4 },
         .os_tag = std.Target.Os.Tag.freestanding,
         .abi = std.Target.Abi.eabi,
     };
 
     // Standard release options allow the person running `zig build` to select
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    b.setPreferredReleaseMode(std.builtin.Mode.Debug);
+    // b.setPreferredReleaseMode(std.builtin.Mode.ReleaseSmall);
     const mode = b.standardReleaseOptions();
-    const elf = b.addExecutable("zig-qemu-vexpress-a9.elf", "src/startup.zig");
+    const elf = b.addExecutable("zig-armfly-stm32-v6.elf", "src/startup.zig");
     elf.setTarget(target);
     elf.setBuildMode(mode);
     elf.install();
@@ -37,7 +37,7 @@ pub fn build(b: *std.build.Builder) void {
         run_cmd.addArgs(args);
     }
 
-    const bin = b.addInstallRaw(elf, "zig-qemu-vexpress-a9.bin", .{});
+    const bin = b.addInstallRaw(elf, "zig-armfly-stm32-v6.bin", .{});
     const bin_step = b.step("bin", "Generate binary file to be flashed");
     bin_step.dependOn(&bin.step);
 
