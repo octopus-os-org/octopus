@@ -4,8 +4,8 @@ const board = @import("board/board.zig");
 
 pub fn main() void {
     periph.clock.clock_init();
-    board.led.led_init();
-    board.uart.uart_init();
+
+    board.init();
 
     board.uart.uart_putc(':');
 

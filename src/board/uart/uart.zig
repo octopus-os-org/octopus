@@ -1,7 +1,7 @@
 const regs = @import("../../chip/register/register.zig");
 
 // uart2
-pub fn uart_init() void {
+pub fn init() void {
     // Init pin and uart
 
     // Enable clock

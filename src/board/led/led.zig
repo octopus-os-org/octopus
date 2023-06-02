@@ -2,7 +2,7 @@ const regs = @import("../../chip/register/register.zig");
 
 // GPIOA12
 
-pub fn led_init() void {
+pub fn init() void {
     // enable clock
     regs.RCC.AHB1ENR.modify(.{ .GPIOAEN = 1 });
 
