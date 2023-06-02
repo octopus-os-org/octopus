@@ -1,7 +1,15 @@
 const regs = @import("../../chip/register/register.zig");
 
-pub fn led_init() void {}
+// GPIOA12
+
+pub fn led_init() void {
+    // enable clock
+    regs.RCC.AHB1ENR.modify(.{ .GPIOAEN = 1 });
+
+    // set pin to output
+    regs.GPIOA.MODER.modify(.{ .MODER12 = 0b01 });
+}
 
 pub fn led_toggle() void {
-    regs.GPIO.GPIO1.DR.modify(.{ .IO3 = ~regs.GPIO.GPIO1.DR.read().IO3 });
+    regs.GPIOA.ODR.modify(.{ .ODR12 = ~regs.GPIOA.ODR.read().ODR12 });
 }
