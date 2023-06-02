@@ -18,10 +18,8 @@ pub fn main() void {
             asm volatile ("nop");
             i += 1;
         }
-        var rd = board.uart.uart_getc_noblock();
-
-        if (rd >= 0) {
-            board.uart.uart_putc(@bitCast(u8, rd));
+        if (board.uart.uart_getc_noblock()) |rd| {
+            board.uart.uart_putc(rd);
         }
     }
 }

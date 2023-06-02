@@ -32,11 +32,11 @@ pub fn uart_getc() u8 {
 }
 
 // TODO: optimize this. consider just keep a getc
-pub fn uart_getc_noblock() i8 {
+pub fn uart_getc_noblock() ?u8 {
     const uart = regs.USART2;
 
     if (uart.SR.read().RXNE == 1) {
-        return @bitCast(i8, @truncate(u8, uart.DR.read().DR));
+        return @truncate(u8, uart.DR.read().DR);
     }
-    return -1;
+    return null;
 }
