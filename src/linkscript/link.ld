@@ -25,10 +25,7 @@
 /* Define memory regions. */
 MEMORY
 {
-  /* ROM (rx)  : ORIGIN = 0x8000000, LENGTH = 2048K
-  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
-  CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K */
-  ROM (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
+  ROM (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
   RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
   CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K
 }
@@ -72,4 +69,4 @@ SECTIONS
   /* _stack_end = _stack_start + 0x1000; 64KB */
 }
 
-PROVIDE(_stack_end = ORIGIN(RAM) + LENGTH(RAM));
+PROVIDE(_stack_end = ORIGIN(CCMRAM) + LENGTH(CCMRAM));

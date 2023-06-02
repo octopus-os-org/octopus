@@ -1,1 +1,2 @@
-arm-none-eabi-size.exe zig-out/bin/zig-armfly-stm32-v6.elf 
+elffile=`ls zig-out/bin/*.elf | head -n 1`
+arm-none-eabi-size.exe ${elffile}

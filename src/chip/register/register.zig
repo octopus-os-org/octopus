@@ -4130,59 +4130,20 @@ pub const RCC = struct {
 
     /// PLLCFGR
     const PLLCFGR_val = packed struct {
-        /// PLLM0 [0:0]
+        /// PLLM0 [5:0]
         /// Division factor for the main PLL (PLL)
-        PLLM0: u1 = 0,
-        /// PLLM1 [1:1]
-        /// Division factor for the main PLL (PLL)
-        PLLM1: u1 = 0,
-        /// PLLM2 [2:2]
-        /// Division factor for the main PLL (PLL)
-        PLLM2: u1 = 0,
-        /// PLLM3 [3:3]
-        /// Division factor for the main PLL (PLL)
-        PLLM3: u1 = 0,
-        /// PLLM4 [4:4]
-        /// Division factor for the main PLL (PLL)
-        PLLM4: u1 = 1,
-        /// PLLM5 [5:5]
-        /// Division factor for the main PLL (PLL)
-        PLLM5: u1 = 0,
-        /// PLLN0 [6:6]
+        PLLM: u6 = 0,
+
+        /// PLLN0 [14:6]
         /// Main PLL (PLL) multiplication factor for
-        PLLN0: u1 = 0,
-        /// PLLN1 [7:7]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN1: u1 = 0,
-        /// PLLN2 [8:8]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN2: u1 = 0,
-        /// PLLN3 [9:9]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN3: u1 = 0,
-        /// PLLN4 [10:10]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN4: u1 = 0,
-        /// PLLN5 [11:11]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN5: u1 = 0,
-        /// PLLN6 [12:12]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN6: u1 = 1,
-        /// PLLN7 [13:13]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN7: u1 = 1,
-        /// PLLN8 [14:14]
-        /// Main PLL (PLL) multiplication factor for
-        PLLN8: u1 = 0,
+        PLLN: u9 = 0,
+
         /// unused [15:15]
         _unused15: u1 = 0,
-        /// PLLP0 [16:16]
+        /// PLLP0 [17:16]
         /// Main PLL (PLL) division factor for main
-        PLLP0: u1 = 0,
-        /// PLLP1 [17:17]
-        /// Main PLL (PLL) division factor for main
-        PLLP1: u1 = 0,
+        PLLP: u2 = 0,
+
         /// unused [18:21]
         _unused18: u4 = 0,
         /// PLLSRC [22:22]
@@ -4190,18 +4151,10 @@ pub const RCC = struct {
         PLLSRC: u1 = 0,
         /// unused [23:23]
         _unused23: u1 = 0,
-        /// PLLQ0 [24:24]
+        /// PLLQ0 [27:24]
         /// Main PLL (PLL) division factor for USB
-        PLLQ0: u1 = 0,
-        /// PLLQ1 [25:25]
-        /// Main PLL (PLL) division factor for USB
-        PLLQ1: u1 = 0,
-        /// PLLQ2 [26:26]
-        /// Main PLL (PLL) division factor for USB
-        PLLQ2: u1 = 1,
-        /// PLLQ3 [27:27]
-        /// Main PLL (PLL) division factor for USB
-        PLLQ3: u1 = 0,
+        PLLQ: u4 = 0,
+
         /// unused [28:31]
         _unused28: u4 = 2,
     };
@@ -4210,18 +4163,14 @@ pub const RCC = struct {
 
     /// CFGR
     const CFGR_val = packed struct {
-        /// SW0 [0:0]
+        /// SW [1:0]
         /// System clock switch
-        SW0: u1 = 0,
-        /// SW1 [1:1]
-        /// System clock switch
-        SW1: u1 = 0,
-        /// SWS0 [2:2]
+        SW: u2 = 0,
+
+        /// SWS0 [3:2]
         /// System clock switch status
-        SWS0: u1 = 0,
-        /// SWS1 [3:3]
-        /// System clock switch status
-        SWS1: u1 = 0,
+        SWS: u2 = 0,
+
         /// HPRE [4:7]
         /// AHB prescaler
         HPRE: u4 = 0,

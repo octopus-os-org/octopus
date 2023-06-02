@@ -1,1 +1,0 @@
-openocd -f interface/cmsis-dap.cfg -f target/stm32f4x.cfg  -c "program zig-out/bin/zig-armfly-stm32-v6.elf reset " -c "exit" 

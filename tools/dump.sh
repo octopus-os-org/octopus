@@ -1,1 +1,2 @@
-arm-none-eabi-objdump.exe zig-out/bin/zig-armfly-stm32-v6.elf -D > objdump.out
+elffile=`ls zig-out/bin/*.elf | head -n 1`
+arm-none-eabi-objdump.exe ${elffile} -D > objdump.out

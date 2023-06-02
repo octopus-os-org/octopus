@@ -18,36 +18,28 @@ pub fn build(b: *std.build.Builder) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     // b.setPreferredReleaseMode(std.builtin.Mode.ReleaseSmall);
     const mode = b.standardReleaseOptions();
-    const elf = b.addExecutable("zig-armfly-stm32-v6.elf", "src/startup.zig");
+    const elf = b.addExecutable("zig-program.elf", "src/startup.zig");
     elf.setTarget(target);
     elf.setBuildMode(mode);
-    elf.install();
-
     // add other files
-    elf.addAssemblyFileSource(.{ .path = "src/startup.s" });
-
+    elf.addAssemblyFileSource(.{ .path = "src/startup/startup.s" });
     // add linker script
-    elf.setLinkerScriptPath(.{ .path = "src/link.ld" });
+    elf.setLinkerScriptPath(.{ .path = "src/linkscript/link.ld" });
 
     // std.debug.print("mode:{}\n", .{mode});
 
-    const run_cmd = elf.run();
-    run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
-
-    const bin = b.addInstallRaw(elf, "zig-armfly-stm32-v6.bin", .{});
+    // BIN STEP
+    const bin = b.addInstallRaw(elf, "zig-program.bin", .{});
     const bin_step = b.step("bin", "Generate binary file to be flashed");
     bin_step.dependOn(&bin.step);
 
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
+    // FLASH STEP
+    const flash_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/flash.sh" });
+    flash_cmd.step.dependOn(&bin.step);
+    const flash_step = b.step("flash", "flash program into target");
+    flash_step.dependOn(&flash_cmd.step);
 
-    // const exe_tests = b.addTest("src/main.zig");
-    // exe_tests.setTarget(target);
-    // exe_tests.setBuildMode(mode);
-
-    // const test_step = b.step("test", "Run unit tests");
-    // test_step.dependOn(&exe_tests.step);
+    // .
+    b.default_step.dependOn(&elf.step);
+    b.installArtifact(elf);
 }
