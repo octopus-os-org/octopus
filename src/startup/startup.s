@@ -1,10 +1,12 @@
 .global RawResetHandler
-.global interruptHandler
+.global InterruptHandler
 
-.global PendSV_Handler
+.extern PendSV_Handler
+.extern _stack_end
+.extern resetHandler
 
 
-.equ _intHandler, interruptHandler
+.equ _intHandler, InterruptHandler
 .equ _resetHandler, RawResetHandler+1
 
 .section .vector_table,"a",%progbits
@@ -24,7 +26,7 @@ _vector_table:
     .word  _intHandler /*SVC_Handler */
     .word  _intHandler /*DebugMon_Handler */
     .word  _intHandler /*0 */
-    .word  _intHandler /*PendSV_Handler */
+    .word  PendSV_Handler /*PendSV_Handler */
     .word  _intHandler /*SysTick_Handler */
     
     /* External Interrupts */
@@ -111,11 +113,8 @@ _vector_table:
     .word  _intHandler    /* Hash and Rng                 */
     .word  _intHandler    /* FPU                          */
 
-
 .section .text
 RawResetHandler:
     ldr sp, =_stack_end       /* set stack pointer */
     b resetHandler
-
-
 

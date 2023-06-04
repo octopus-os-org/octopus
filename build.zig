@@ -23,6 +23,11 @@ pub fn build(b: *std.build.Builder) void {
     elf.setBuildMode(mode);
     // add other files
     elf.addAssemblyFileSource(.{ .path = "src/startup/startup.s" });
+
+    elf.addAssemblyFileSource(.{ .path = "src/mr/cpu/arm/cortex-m4/context.s" });
+    elf.addCSourceFile("src/mr/cpu/arm/cortex-m4/cpuport.c", &[_][]const u8{"-std=c11"});
+    elf.addIncludePath("src/mr/include");
+
     // add linker script
     elf.setLinkerScriptPath(.{ .path = "src/linkscript/link.ld" });
 
