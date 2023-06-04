@@ -7,7 +7,9 @@ extern const _data_end: u32;
 extern var _bss_start: u32;
 extern const _bss_end: u32;
 
+// note: ref https://ziglang.org/documentation/master/std/#A;std:builtin.CallingConvention
 export fn resetHandler() callconv(.C) void {
+
     // Copy data from flash to RAM
     const data_loadaddr = @ptrCast([*]const u8, &_data_loadaddr);
     const data = @ptrCast([*]u8, &_data_start);

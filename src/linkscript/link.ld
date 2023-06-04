@@ -38,7 +38,7 @@ SECTIONS
 {
   .text : {
     . = ALIGN(4);
-    KEEP(*(.text.vector_table)); /* Vector table and pretect this section from removing (the optmization will remove unrefered code) */
+    KEEP(*(.vector_table)); /* Vector table and pretect this section from removing (the optmization will remove unrefered code) */
     *(.text)  /* Program code */
     *(.text*)  /* Program code */
     *(.rodata)  /* Read-only data */

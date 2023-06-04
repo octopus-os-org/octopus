@@ -18,8 +18,11 @@ pub fn main() void {
             asm volatile ("nop");
             i += 1;
         }
-        if (board.uart.uart_getc_noblock()) |rd| {
-            board.uart.uart_putc(rd);
         }
-    }
+
+export fn interruptHandler() callconv(.C) void {
+    var sta = regs.SCB.ICSR.read();
+
+    _ = board.uart.uart_getc_noblock(); //clear uart rx-isr
+    board.uart.uart_putc(@truncate(u8, sta.VECTACTIVE));
 }
