@@ -22,6 +22,9 @@
  * 64K Core Coupled Memory RAM).
  */
 
+/* Define the entry point of the output file. */
+ENTRY(RawResetHandler)
+
 /* Define memory regions. */
 MEMORY
 {
@@ -29,9 +32,6 @@ MEMORY
   RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
   CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K
 }
-
-/* Define the entry point of the output file. */
-ENTRY(RawResetHandler)
 
 /* Define sections. */
 SECTIONS
@@ -69,4 +69,4 @@ SECTIONS
   /* _stack_end = _stack_start + 0x1000; 64KB */
 }
 
-PROVIDE(_stack_end = ORIGIN(CCMRAM) + LENGTH(CCMRAM));
+PROVIDE(_stack_end = ORIGIN(RAM) + LENGTH(RAM));

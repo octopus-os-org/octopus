@@ -21,12 +21,15 @@ pub fn build(b: *std.build.Builder) void {
     const elf = b.addExecutable("zig-program.elf", "src/startup.zig");
     elf.setTarget(target);
     elf.setBuildMode(mode);
+
     // add other files
     elf.addAssemblyFileSource(.{ .path = "src/startup/startup.s" });
 
-    elf.addAssemblyFileSource(.{ .path = "src/mr/cpu/arm/cortex-m4/context.s" });
-    elf.addCSourceFile("src/mr/cpu/arm/cortex-m4/cpuport.c", &[_][]const u8{"-std=c11"});
-    elf.addIncludePath("src/mr/include");
+    const rttroot = "src/mr/rtthread/";
+    elf.addAssemblyFileSource(.{ .path = rttroot ++ "cpu/arm/cortex-m4/context.s" });
+    elf.addCSourceFile(rttroot ++ "cpu/arm/cortex-m4/cpuport.c", &[_][]const u8{"-std=c11"});
+    elf.addIncludePath(rttroot ++ "include");
+    elf.addIncludePath(rttroot ++ "port");
 
     // add linker script
     elf.setLinkerScriptPath(.{ .path = "src/linkscript/link.ld" });
@@ -43,6 +46,12 @@ pub fn build(b: *std.build.Builder) void {
     flash_cmd.step.dependOn(&bin.step);
     const flash_step = b.step("flash", "flash program into target");
     flash_step.dependOn(&flash_cmd.step);
+
+    // FLASH ELF STEP
+    const flashelf_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/flashelf.sh" });
+    flashelf_cmd.step.dependOn(b.default_step);
+    const flashelf_step = b.step("flashelf", "flash program(elf) into target");
+    flashelf_step.dependOn(&flashelf_cmd.step);
 
     // .
     b.default_step.dependOn(&elf.step);
