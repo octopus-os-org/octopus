@@ -39,6 +39,13 @@ fn routine2(p: *anyopaque) callconv(.C) void {
     }
 }
 
+export fn rt_hw_console_output(s: [*c]const u8) void {
+    var str = s;
+    while (str.* != 0) : (str += 1) {
+        board.uart.uart_putc(str.*);
+    }
+}
+
 pub fn main() void {
     periph.clock.clock_init();
 
@@ -48,6 +55,8 @@ pub fn main() void {
     r2_handle = rt.rt_hw_stack_init(@ptrCast(?*const anyopaque, &routine2), null, &r2_buf[1023], null);
 
     board.uart.uart_putc(':');
+
+    rt.rt_show_version();
 
     rt.rt_hw_context_switch_to(@ptrToInt(&r1_handle));
 

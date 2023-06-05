@@ -88,7 +88,7 @@ void rt_hw_cpu_shutdown(void);
 
 const char *rt_hw_cpu_arch(void);
 
-rt_uint8_t *rt_hw_stack_init(void       *entry,
+rt_uint8_t *rt_hw_stack_init(const void       *entry,
                              void       *parameter,
                              rt_uint8_t *stack_addr,
                              void       *exit);

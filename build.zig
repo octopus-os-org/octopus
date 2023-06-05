@@ -21,15 +21,32 @@ pub fn build(b: *std.build.Builder) void {
     const elf = b.addExecutable("zig-program.elf", "src/startup.zig");
     elf.setTarget(target);
     elf.setBuildMode(mode);
+    elf.install();
 
     // add other files
     elf.addAssemblyFileSource(.{ .path = "src/startup/startup.s" });
 
     const rttroot = "src/mr/rtthread/";
+
+    elf.addIncludePath(rttroot ++ "port");
+    elf.addIncludePath(rttroot ++ "include");
     elf.addAssemblyFileSource(.{ .path = rttroot ++ "cpu/arm/cortex-m4/context.s" });
     elf.addCSourceFile(rttroot ++ "cpu/arm/cortex-m4/cpuport.c", &[_][]const u8{"-std=c11"});
-    elf.addIncludePath(rttroot ++ "include");
-    elf.addIncludePath(rttroot ++ "port");
+
+    elf.addCSourceFile(rttroot ++ "src/clock.c", &[_][]const u8{"-std=c11"});
+    // elf.addCSourceFile(rttroot ++ "src/components.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/idle.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/ipc.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/irq.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/kservice.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/mem.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/memheap.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/mempool.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/object.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/scheduler_up.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/slab.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/thread.c", &[_][]const u8{"-std=c11"});
+    elf.addCSourceFile(rttroot ++ "src/timer.c", &[_][]const u8{"-std=c11"});
 
     // add linker script
     elf.setLinkerScriptPath(.{ .path = "src/linkscript/link.ld" });
@@ -52,8 +69,4 @@ pub fn build(b: *std.build.Builder) void {
     flashelf_cmd.step.dependOn(b.default_step);
     const flashelf_step = b.step("flashelf", "flash program(elf) into target");
     flashelf_step.dependOn(&flashelf_cmd.step);
-
-    // .
-    b.default_step.dependOn(&elf.step);
-    b.installArtifact(elf);
 }

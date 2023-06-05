@@ -1,0 +1,11 @@
+mainmenu "MR RT-Thread Configuration"
+
+# config RTT_DIR
+#     string
+#     option env="RTT_ROOT"
+#     default "../.."
+
+# source "$RTT_DIR/Kconfig"
+
+source "../src/Kconfig"
+
