@@ -1,0 +1,1 @@
+- try move startup.zig into startup/ (which now will complain "import of file outside package path")
