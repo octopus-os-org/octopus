@@ -45,6 +45,19 @@ export fn rt_hw_console_output(s: [*c]const u8) void {
         board.uart.uart_putc(str.*);
     }
 }
+fn main_thread_entry(p: *anyopaque) callconv(.C) void {
+    _ = p;
+    while (true) {
+        board.led.led_toggle();
+
+        // Sleep for some time
+        delay();
+
+        if (board.uart.uart_getc_noblock()) |rd| {
+            board.uart.uart_putc(rd);
+        }
+    }
+}
 
 pub fn main() void {
     periph.clock.clock_init();
@@ -56,7 +69,7 @@ pub fn main() void {
 
     board.uart.uart_putc(':');
 
-    rt.rt_show_version();
+    rt.rtthread_startup(@ptrCast(?*const anyopaque, &main_thread_entry), 0, 0);
 
     rt.rt_hw_context_switch_to(@ptrToInt(&r1_handle));
 
@@ -76,7 +89,7 @@ pub fn main() void {
 
 fn delay() void {
     var i: u32 = 0;
-    while (i < 900000) {
+    while (i < 9000000) {
         asm volatile ("nop");
         i += 1;
     }
@@ -86,5 +99,7 @@ export fn InterruptHandler() callconv(.C) void {
     var sta = regs.SCB.ICSR.read();
 
     //_ = board.uart.uart_getc_noblock(); //clear uart rx-isr
+    board.uart.puts("InterruptHandler");
     board.uart.uart_putc(@truncate(u8, sta.VECTACTIVE));
+    while (true) {}
 }

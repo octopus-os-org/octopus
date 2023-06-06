@@ -40,3 +40,9 @@ pub fn uart_getc_noblock() ?u8 {
     }
     return null;
 }
+
+pub fn puts(s: []const u8) void {
+    for (s) |c| {
+        uart_putc(c);
+    }
+}

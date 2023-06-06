@@ -29,4 +29,6 @@
 // note: optional
 // void rt_hw_cpu_reset(void);
 
+void rtthread_startup(const void *main_thread_entry, unsigned int heap_begin, unsigned int heap_end);
+
 #endif

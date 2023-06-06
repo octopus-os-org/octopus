@@ -1,4 +1,5 @@
 const std = @import("std");
+const rt = @import("src/mr/subuild.zig");
 
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
@@ -23,33 +24,14 @@ pub fn build(b: *std.build.Builder) void {
     elf.setBuildMode(mode);
     elf.install();
 
+    // add rtthread
+    rt.subuild(b, elf);
+
     // add other files
-    elf.addAssemblyFileSource(.{ .path = "src/startup/startup.s" });
-
-    const rttroot = "src/mr/rtthread/";
-
-    elf.addIncludePath(rttroot ++ "port");
-    elf.addIncludePath(rttroot ++ "include");
-    elf.addAssemblyFileSource(.{ .path = rttroot ++ "cpu/arm/cortex-m4/context.s" });
-    elf.addCSourceFile(rttroot ++ "cpu/arm/cortex-m4/cpuport.c", &[_][]const u8{"-std=c11"});
-
-    elf.addCSourceFile(rttroot ++ "src/clock.c", &[_][]const u8{"-std=c11"});
-    // elf.addCSourceFile(rttroot ++ "src/components.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/idle.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/ipc.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/irq.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/kservice.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/mem.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/memheap.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/mempool.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/object.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/scheduler_up.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/slab.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/thread.c", &[_][]const u8{"-std=c11"});
-    elf.addCSourceFile(rttroot ++ "src/timer.c", &[_][]const u8{"-std=c11"});
+    elf.addAssemblyFile("src/startup/startup.s");
 
     // add linker script
-    elf.setLinkerScriptPath(.{ .path = "src/linkscript/link.ld" });
+    elf.setLinkerScriptPath(.{ .path = "src/startup/link.ld" });
 
     // std.debug.print("mode:{}\n", .{mode});
 

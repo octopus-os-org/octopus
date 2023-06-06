@@ -5,9 +5,8 @@
 .extern _stack_end
 .extern resetHandler
 
-
 .equ _intHandler, InterruptHandler
-.equ _resetHandler, RawResetHandler+1
+.equ _resetHandler, RawResetHandler
 
 .section .vector_table,"a",%progbits
 .type  _vector_table, %object
@@ -114,7 +113,7 @@ _vector_table:
     .word  _intHandler    /* FPU                          */
 
 .section .text
+.type  RawResetHandler, %function
 RawResetHandler:
-    ldr sp, =_stack_end       /* set stack pointer */
-    b resetHandler
-
+  ldr   sp, =_stack_end     /* set stack pointer */
+  b resetHandler

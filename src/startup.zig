@@ -1,4 +1,5 @@
 const main = @import("main.zig");
+const builtin = @import("std").builtin;
 
 // These symbols come from the linker script
 extern const _data_loadaddr: u32;
@@ -25,4 +26,16 @@ export fn resetHandler() callconv(.C) void {
     main.main();
 
     unreachable;
+}
+
+const board = @import("board/board.zig");
+
+pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
+    @setCold(true);
+    _ = error_return_trace;
+    _ = ret_addr;
+    board.uart.puts("\n!KERNEL PANIC!\n");
+    board.uart.puts(msg);
+    board.uart.puts("\n");
+    while (true) {}
 }
