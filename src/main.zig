@@ -2,12 +2,8 @@ const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
 
-const std = @import("std");
-const expect = std.testing.expect;
-
-const rt = @cImport({
-    @cInclude("rtapi.h");
-});
+const mr = @import("mr/mr.zig");
+const app = @import("app.zig");
 
 pub fn main() void {
     periph.clock.clock_init();
@@ -16,34 +12,11 @@ pub fn main() void {
 
     board.uart.uart_putc(':');
 
-    rt.rtthread_startup(@ptrCast(?*const anyopaque, &main_thread_entry), 0, 0);
+    mr.startup(&app.app_entry);
 
     // regs.SCB.ICSR.modify(.{ .PENDSVSET = 1 });
 
     // never reach here
-
-}
-
-fn main_thread_entry(p: *anyopaque) callconv(.C) void {
-    _ = p;
-    while (true) {
-        board.led.led_toggle();
-
-        // Sleep for some time
-        delay();
-
-        if (board.uart.uart_getc_noblock()) |rd| {
-            board.uart.uart_putc(rd);
-        }
-    }
-}
-
-fn delay() void {
-    var i: u32 = 0;
-    while (i < 9000000) {
-        asm volatile ("nop");
-        i += 1;
-    }
 }
 
 // port for rtthread

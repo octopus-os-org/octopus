@@ -51,4 +51,17 @@ pub fn build(b: *std.build.Builder) void {
     flashelf_cmd.step.dependOn(b.default_step);
     const flashelf_step = b.step("flashelf", "flash program(elf) into target");
     flashelf_step.dependOn(&flashelf_cmd.step);
+
+    // TEST STEP
+    const elf_tests = b.addTest("src/startup.zig");
+
+    rt.test_subuild(b, elf_tests);
+    elf_tests.addAssemblyFile("src/startup/startup.s");
+    elf_tests.setLinkerScriptPath(.{ .path = "src/startup/link.ld" });
+
+    elf_tests.setTarget(target);
+    elf_tests.setBuildMode(mode);
+
+    const test_step = b.step("test", "Run unit tests");
+    test_step.dependOn(&elf_tests.step);
 }

@@ -49,3 +49,33 @@ fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
 
     return rtt;
 }
+
+pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
+    _ = b;
+    t.addIncludePath(rpwd ++ "port");
+    t.addIncludePath(rpwd ++ "include");
+
+    const cflags = &[_][]const u8{"-std=c11"};
+
+    // port source files
+    t.addCSourceFile(rpwd ++ "port/start.c", cflags);
+
+    // chip-specific source files
+    t.addAssemblyFile(rpwd ++ "cpu/arm/cortex-m4/context.s");
+    t.addCSourceFile(rpwd ++ "cpu/arm/cortex-m4/cpuport.c", cflags);
+
+    // core source files
+    t.addCSourceFile(rpwd ++ "src/clock.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/idle.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/ipc.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/irq.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/kservice.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/mem.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/memheap.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/mempool.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/object.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/scheduler_up.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/slab.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/thread.c", cflags);
+    t.addCSourceFile(rpwd ++ "src/timer.c", cflags);
+}
