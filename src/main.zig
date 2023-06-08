@@ -19,6 +19,15 @@ pub fn main() void {
     // never reach here
 }
 
+export fn InterruptHandler() callconv(.C) void {
+    var sta = regs.SCB.ICSR.read();
+
+    //_ = board.uart.uart_getc_noblock(); //clear uart rx-isr
+    board.uart.puts("InterruptHandler");
+    board.uart.uart_putc(@truncate(u8, sta.VECTACTIVE));
+    while (true) {}
+}
+
 // port for rtthread
 export fn rt_hw_console_output(s: [*c]const u8) void {
     var str = s;
@@ -27,11 +36,18 @@ export fn rt_hw_console_output(s: [*c]const u8) void {
     }
 }
 
-export fn InterruptHandler() callconv(.C) void {
-    var sta = regs.SCB.ICSR.read();
+const tcmd = "help\n";
+var tcmdIdx: u32 = 0;
 
-    //_ = board.uart.uart_getc_noblock(); //clear uart rx-isr
-    board.uart.puts("InterruptHandler");
-    board.uart.uart_putc(@truncate(u8, sta.VECTACTIVE));
-    while (true) {}
+// port for rtthread
+export fn rt_hw_console_getchar() u8 {
+    mr.thread.sleepMs(1000);
+
+    if (tcmdIdx >= 5) {
+        tcmdIdx = 0;
+    }
+
+    var tc = tcmd[tcmdIdx];
+    tcmdIdx += 1;
+    return tc;
 }

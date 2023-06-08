@@ -1,0 +1,5 @@
+menu "RT-Thread Components"
+
+source "components/finsh/Kconfig"
+
+endmenu

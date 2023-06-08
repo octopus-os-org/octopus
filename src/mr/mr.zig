@@ -4,6 +4,10 @@ const rt = @cImport({
     @cInclude("rtapi.h");
 });
 
+const finsh = @cImport({
+    @cInclude("shell.h");
+});
+
 const cpu = @import("cpu/arm/cortex_m4.zig");
 
 var main_thread = thread.Thread{};
@@ -16,7 +20,7 @@ pub fn startup(main_entry: thread.ThreadEntry) void {
     // NOTE: please initialize heap inside board initialization.
     //rt_hw_board_init(heap_begin, heap_end);
 
-    // configure system tick
+    // . configure system tick
     // ticks = clockHZ / neededHZ
     // x = 168000000 / 1000  = 168000  (168MHz, 1ms / per irq)
     // clock = 168 / 8 = 21MHz
@@ -37,6 +41,9 @@ pub fn startup(main_entry: thread.ThreadEntry) void {
     // application initialization (main_thread)
     _ = main_thread.init("main", main_entry, null, &main_thread_stack, rt.RT_THREAD_PRIORITY_MAX / 3, 20) catch {};
     _ = main_thread.startup() catch {};
+
+    // . finsh
+    _ = finsh.finsh_system_init();
 
     // timer thread initialization
     rt.rt_system_timer_thread_init();

@@ -1,4 +1,5 @@
 const std = @import("std");
+const components = @import("components/subuild.zig");
 
 const rpwd = "src/mr/rtthread/";
 
@@ -8,9 +9,12 @@ pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     rtt.setTarget(t.target);
     rtt.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
+    rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
     t.addIncludePath(rpwd);
     t.addIncludePath(rpwd ++ "include");
     t.addObject(rtt);
+
+    components.subuild(b, t);
 }
 
 fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
@@ -22,6 +26,7 @@ fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
     // rtt.setBuildMode(std.builtin.Mode.ReleaseFast);
 
     // include path
+    rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
     rtt.addIncludePath(rpwd);
     rtt.addIncludePath(rpwd ++ "include");
 

@@ -8,4 +8,6 @@ mainmenu "MR RT-Thread Configuration"
 # source "$RTT_DIR/Kconfig"
 
 source "src/Kconfig"
+source "components/Kconfig"
+
 
