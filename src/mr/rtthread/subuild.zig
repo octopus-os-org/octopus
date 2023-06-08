@@ -8,7 +8,7 @@ pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     rtt.setTarget(t.target);
     rtt.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
-    t.addIncludePath(rpwd ++ "port");
+    t.addIncludePath(rpwd);
     t.addIncludePath(rpwd ++ "include");
     t.addObject(rtt);
 }
@@ -22,11 +22,11 @@ fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
     // rtt.setBuildMode(std.builtin.Mode.ReleaseFast);
 
     // include path
-    rtt.addIncludePath(rpwd ++ "port");
+    rtt.addIncludePath(rpwd);
     rtt.addIncludePath(rpwd ++ "include");
 
     // port source files
-    rtt.addCSourceFile(rpwd ++ "port/start.c", cflags);
+    rtt.addCSourceFile(rpwd ++ "start.c", cflags);
 
     // chip-specific source files
     rtt.addAssemblyFile(rpwd ++ "cpu/arm/cortex-m4/context.s");
