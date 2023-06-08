@@ -43,6 +43,18 @@ SECTIONS
     *(.text*)  /* Program code */
     *(.rodata)  /* Read-only data */
     *(.rodata*)  /* Read-only data */
+
+    /* section information for finsh shell */
+    . = ALIGN(4);
+    __fsymtab_start = .;
+    KEEP(*(FSymTab))
+    __fsymtab_end = .;
+    
+    . = ALIGN(4);
+    __vsymtab_start = .;
+    KEEP(*(VSymTab))
+    __vsymtab_end = .;
+
     . = ALIGN(4);
   } >ROM
 

@@ -677,6 +677,7 @@ char *rt_strncpy(char *dest, const char *src, rt_size_t n);
 rt_int32_t rt_strncmp(const char *cs, const char *ct, rt_size_t count);
 rt_int32_t rt_strcmp(const char *cs, const char *ct);
 rt_size_t rt_strlen(const char *src);
+char *rt_strcat(char *dest, const char *src);
 #else
 #include <string.h>
 #ifdef RT_KSERVICE_USING_STDLIB_MEMORY

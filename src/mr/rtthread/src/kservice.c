@@ -664,6 +664,17 @@ char *rt_strdup(const char *s)
 RTM_EXPORT(rt_strdup);
 #endif /* RT_USING_HEAP */
 
+char *rt_strcat(char *dest, const char *src) {
+    unsigned int destLen = rt_strlen(dest);
+
+    while(*src != '\0') {
+        dest[destLen++] = *src++;
+    }
+    dest[destLen] = '\0';
+
+    return dest;
+}
+
 /**
  * @brief This function will show the version of rt-thread rtos
  */
