@@ -12,18 +12,10 @@ pub fn app_entry(p: ?*anyopaque) void {
         board.led.led_toggle();
 
         // Sleep for some time
-        delay();
+        mr.thread.sleepMs(500);
 
         if (board.uart.uart_getc_noblock()) |rd| {
             board.uart.uart_putc(rd);
         }
-    }
-}
-
-fn delay() void {
-    var i: u32 = 0;
-    while (i < 9000000) {
-        asm volatile ("nop");
-        i += 1;
     }
 }

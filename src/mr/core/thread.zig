@@ -35,3 +35,11 @@ fn _rt_thread_entry(p: ?*anyopaque) callconv(.C) void {
 
     t._thread_entry(t._thread_entry_param);
 }
+
+pub fn sleep(ticks: u32) void {
+    _ = rt.rt_thread_delay(ticks);
+}
+
+pub fn sleepMs(ms: u32) void {
+    sleep(rt.rt_tick_from_millisecond(@bitCast(i32, ms)));
+}

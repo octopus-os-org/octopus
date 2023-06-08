@@ -2,6 +2,7 @@
 .global InterruptHandler
 
 .extern PendSV_Handler
+.extern SysTickIrqHandler
 .extern _stack_end
 .extern resetHandler
 
@@ -26,7 +27,7 @@ _vector_table:
     .word  _intHandler /*DebugMon_Handler */
     .word  _intHandler /*0 */
     .word  PendSV_Handler /*PendSV_Handler */
-    .word  _intHandler /*SysTick_Handler */
+    .word  SysTickIrqHandler /*SysTick_Handler */
     
     /* External Interrupts */
     .word  _intHandler    /* Window WatchDog              */                                        
