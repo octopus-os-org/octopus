@@ -1,9 +1,9 @@
 const rh = @import("register_helper.zig");
 
-const nvic_iser_base_addr = @intToPtr(*u32, 0xE000E100 + 0x100);
-const nvic_icer_base_addr = @intToPtr(*u32, 0xE000E100 + 0x180);
+const nvic_iser_base_addr = @intToPtr(*u32, 0xE000E100);
+const nvic_icer_base_addr = @intToPtr(*u32, 0xE000E180);
 
-const nvic_ipr_base_addr = @intToPtr(*u32, 0xE000E100 + 0x400);
+const nvic_ipr_base_addr = @intToPtr(*u32, 0xE000E400);
 
 /// config interrupt priority of irq_id (which is exception number)
 /// attention: can only handle irq_id [16..]
