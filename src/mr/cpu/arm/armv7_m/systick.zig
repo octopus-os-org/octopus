@@ -84,8 +84,8 @@ pub fn config(ticks: u24, clk_source: ClockSourceEnum) void {
 
     // set reload value
     STK.LOAD.write(.{ .RELOAD = ticks - 1 });
-    // set interrupt priority (reset-default is 0)
-    scb.config_irq_priority_systick(0);
+    // set systick interrupt priority to zero (reset-default is 0 too)
+    _ = scb.set_irq_priority(15, 0) catch {};
     // clear current counter value
     STK.VAL.write_raw(0);
     // set clock source (),

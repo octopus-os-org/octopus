@@ -1,6 +1,7 @@
 const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
+const cc = @import("./mr/cpu/arm/cortex_m4.zig");
 
 const mr = @import("mr/mr.zig");
 const app = @import("app.zig");
@@ -11,7 +12,7 @@ pub fn main() void {
     board.init();
 
     board.uart.uart_putc(':');
-
+    _ = cc.irq.enable_irq(16) catch {};
     mr.startup(&app.app_entry);
 
     // regs.SCB.ICSR.modify(.{ .PENDSVSET = 1 });

@@ -1,4 +1,5 @@
 const rh = @import("register_helper.zig");
+const constants = @import("const.zig");
 
 /// System control block
 pub const SCB = struct {
@@ -209,8 +210,8 @@ pub const SCB = struct {
     /// System handler priority
     pub const SHPR3 = rh.Register(SHPR3_val).init(base_address + 0x20);
 
-    /// SHCRS
-    const SHCRS_val = packed struct {
+    /// SHCSR
+    const SHCSR_val = packed struct {
         /// MEMFAULTACT [0:0]
         /// Memory management fault exception active
         MEMFAULTACT: u1 = 0,
@@ -264,7 +265,7 @@ pub const SCB = struct {
         _unused24: u8 = 0,
     };
     /// System handler control and state
-    pub const SHCRS = rh.Register(SHCRS_val).init(base_address + 0x24);
+    pub const SHCSR = rh.Register(SHCSR_val).init(base_address + 0x24);
 
     /// CFSR_UFSR_BFSR_MMFSR
     const CFSR_UFSR_BFSR_MMFSR_val = packed struct {
@@ -388,6 +389,68 @@ pub const SCB = struct {
     pub const AFSR = rh.Register(AFSR_val).init(base_address + 0x3c);
 };
 
-pub fn config_irq_priority_systick(priority_value: u8) void {
-    SCB.SHPR3.modify(.{ .PRI_15 = priority_value });
+/// config interrupt priority of irq_id (which is exception number)
+/// attention: can only hande [..15]
+pub fn set_irq_priority(ird_id: u8, priority_value: u8) !void {
+    const cii = constants.IrqId;
+
+    switch (ird_id) {
+        cii.MemManageFault => {
+            SCB.SHPR1.modify(.{ .PRI_4 = priority_value });
+        },
+        cii.BusFault => {
+            SCB.SHPR1.modify(.{ .PRI_5 = priority_value });
+        },
+        cii.UsageFault => {
+            SCB.SHPR1.modify(.{ .PRI_6 = priority_value });
+        },
+        cii.SVCall => {
+            SCB.SHPR2.modify(.{ .PRI_11 = priority_value });
+        },
+        cii.PendSV => {
+            SCB.SHPR3.modify(.{ .PRI_14 = priority_value });
+        },
+        cii.SysTick => {
+            SCB.SHPR3.modify(.{ .PRI_15 = priority_value });
+        },
+
+        // ignore others
+        else => {
+            return error.Failure;
+        },
+    }
+}
+
+/// enable interrupt of irq_id (which is exception number)
+/// attention: can only hande [..15]
+pub fn enable_irq(irq_id: u8) !void {
+    try _switch_irq(irq_id, true);
+}
+
+/// disable interrupt of irq_id (which is exception number)
+/// attention: can only hande [..15]
+pub fn disable_irq(irq_id: u8) !void {
+    try _switch_irq(irq_id, false);
+}
+
+fn _switch_irq(irq_id: u8, enable: bool) !void {
+    const cii = constants.IrqId;
+
+    var val = @boolToInt(enable);
+
+    switch (irq_id) {
+        cii.UsageFault => {
+            SCB.SHCSR.modify(.{ .USGFAULTENA = val });
+        },
+        cii.BusFault => {
+            SCB.SHCSR.modify(.{ .BUSFAULTENA = val });
+        },
+        cii.MemManageFault => {
+            SCB.SHCSR.modify(.{ .MEMFAULTENA = val });
+        },
+        // ignore others
+        else => {
+            return error.Failure;
+        },
+    }
 }
