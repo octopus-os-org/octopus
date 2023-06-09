@@ -1,6 +1,8 @@
 const nvic = @import("nvic.zig");
 const scb = @import("scb.zig");
 
+pub const get_current_executing_irqid = scb.get_current_executing_irqid;
+
 // abstract
 
 /// enable interrupt of irq_id (which is exception number)

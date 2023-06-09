@@ -454,3 +454,9 @@ fn _switch_irq(irq_id: u8, enable: bool) !void {
         },
     }
 }
+
+pub inline fn get_current_executing_irqid() u8 {
+    var sta = SCB.ICSR.read();
+
+    return @truncate(u8, sta.VECTACTIVE);
+}
