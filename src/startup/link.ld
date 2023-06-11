@@ -23,7 +23,7 @@
  */
 
 /* Define the entry point of the output file. */
-ENTRY(RawResetHandler)
+ENTRY(_initial)
 
 /* Define memory regions. */
 MEMORY
