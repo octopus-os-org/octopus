@@ -1,4 +1,5 @@
 pub const thread = @import("core/thread.zig");
+pub const ipc = @import("core/ipc.zig");
 
 const rt = @cImport({
     @cInclude("rtapi.h");
