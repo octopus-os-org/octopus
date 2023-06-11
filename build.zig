@@ -35,6 +35,10 @@ pub fn build(b: *std.build.Builder) void {
 
     // std.debug.print("mode:{}\n", .{mode});
 
+    // add lib
+    elf.addIncludePath("src/lib/ringbuffer");
+    elf.addCSourceFile("src/lib/ringbuffer/rb.c", &[_][]const u8{"-std=c11"});
+
     // BIN STEP
     const bin = b.addInstallRaw(elf, "zig-program.bin", .{});
     const bin_step = b.step("bin", "Generate binary file to be flashed");
