@@ -14,8 +14,8 @@ pub fn app_entry(p: ?*anyopaque) void {
         // Sleep for some time
         mr.thread.sleepMs(500);
 
-        if (board.uart.uart_getc_noblock()) |rd| {
-            board.uart.uart_putc(rd);
-        }
+        // if (board.uart.uart_getc_noblock()) |rd| {
+        //     board.uart.uart_putc(rd);
+        // }
     }
 }

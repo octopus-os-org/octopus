@@ -100,7 +100,7 @@ const char *finsh_get_prompt(void)
 
     if (finsh_prompt_custom)
     {
-        strncpy(finsh_prompt, finsh_prompt_custom, sizeof(finsh_prompt) - 1);
+        rt_strncpy(finsh_prompt, finsh_prompt_custom, sizeof(finsh_prompt) - 1);
     }
     else
     {

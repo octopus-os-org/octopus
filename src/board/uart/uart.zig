@@ -16,15 +16,18 @@ pub fn init() void {
     regs.USART2.CR1.modify(.{ .UE = 0 });
     regs.USART2.BRR.modify(.{ .DIV_Fraction = 12, .DIV_Mantissa = 22 });
     regs.USART2.CR1.modify(.{ .UE = 1, .TE = 1, .RE = 1, .M = 0, .OVER8 = 0 });
+
+    // enable uart rx interrupt
+    regs.USART2.CR1.modify(.{ .RXNEIE = 1 });
 }
 
-pub fn uart_putc(c: u8) void {
+pub fn putc(c: u8) void {
     const uart = regs.USART2;
     while (uart.SR.read().TXE == 0) {} // wait last transmit done
     uart.DR.write_raw(c);
 }
 
-pub fn uart_getc() u8 {
+pub fn getc() u8 {
     const uart = regs.USART2;
 
     while (uart.SR.read().RXNE == 0) {} // wait rx ready
@@ -32,7 +35,7 @@ pub fn uart_getc() u8 {
 }
 
 // TODO: optimize this. consider just keep a getc
-pub fn uart_getc_noblock() ?u8 {
+pub fn getc_noblock() ?u8 {
     const uart = regs.USART2;
 
     if (uart.SR.read().RXNE == 1) {
@@ -43,6 +46,6 @@ pub fn uart_getc_noblock() ?u8 {
 
 pub fn puts(s: []const u8) void {
     for (s) |c| {
-        uart_putc(c);
+        putc(c);
     }
 }
