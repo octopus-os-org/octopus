@@ -76,4 +76,9 @@ if RT_USING_MSH
         int "The number of arguments for a shell command"
         default 10
 
+
+    config RT_ENC_FINSH_RINGBUFFER_SIZE
+        int "EncFinsh RingBuffer Size"
+        default 256
+
 endif

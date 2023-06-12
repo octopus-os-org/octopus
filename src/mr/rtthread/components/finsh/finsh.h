@@ -11,6 +11,7 @@
 #define __FINSH_H__
 
 #include <rtdef.h>
+#include "enc_finsh/enc_finsh.h"
 
 #ifdef _MSC_VER
 #pragma section("FSymTab$f",read)

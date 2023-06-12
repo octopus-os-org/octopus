@@ -34,5 +34,8 @@ fn genFinshObject(b: *std.build.Builder) *std.build.LibExeObjStep {
     mobj.addCSourceFile(rpwd ++ "finsh/msh.c", cflags);
     mobj.addCSourceFile(rpwd ++ "finsh/shell.c", cflags);
 
+    mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/enc_finsh.c", cflags);
+    // mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/rb.c", cflags);
+
     return mobj;
 }
