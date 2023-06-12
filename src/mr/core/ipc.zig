@@ -26,3 +26,22 @@ pub const MsgQueue = struct {
         }
     }
 };
+
+pub const Sem = struct {
+    _rt_sem_handle: rt.rt_sem_t = 0,
+
+    pub fn init(self: *Sem, name: []const u8, val: u32) !void {
+        self._rt_sem_handle = rt.rt_sem_create(@ptrCast([*c]const u8, name), val, rt.RT_IPC_FLAG_PRIO);
+        if (self._rt_sem_handle == 0) {
+            return error.Failure;
+        }
+    }
+
+    pub fn take(self: *Sem, timeout: i32) void {
+        _ = rt.rt_sem_take(self._rt_sem_handle, timeout);
+    }
+
+    pub fn release(self: *Sem) void {
+        _ = rt.rt_sem_release(self._rt_sem_handle);
+    }
+};
