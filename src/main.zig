@@ -5,6 +5,11 @@ const cc = @import("./mr/cpu/arm/cortex_m4.zig");
 const chip = @import("./mr/cpu/stm32f407vet6.zig");
 
 const mr = @import("mr/mr.zig");
+
+const rtfinsh = @cImport({
+    @cInclude("finsh.h");
+});
+
 const app = @import("app.zig");
 
 const librb = @cImport({
@@ -12,11 +17,6 @@ const librb = @cImport({
 });
 
 var irq_handler_table: [256]?*const fn (irq_id: u8, p: ?*anyopaque) void = undefined;
-
-var uart_rx_rb: librb.ringbuffer = undefined;
-var uart_rx_rb_buffer: [512]u8 = undefined;
-
-var uart_rx_sem: mr.ipc.Sem = undefined;
 
 pub fn main() void {
     periph.clock.clock_init();
@@ -35,8 +35,6 @@ pub fn main() void {
 
 pub fn _app_entry(p: ?*anyopaque) void {
     // enable uart rx int
-    librb.rb_init(&uart_rx_rb, @ptrCast(?*anyopaque, &uart_rx_rb_buffer[0]), uart_rx_rb_buffer.len);
-    _ = uart_rx_sem.init("uartRx", 0) catch {};
 
     irq_handler_table[chip.IrqId.USART2] = uart2_irq_handler;
     _ = cc.irq.set_irq_priority(chip.IrqId.USART2, 150) catch {};
@@ -54,9 +52,7 @@ fn uart2_irq_handler(irq_id: u8, p: ?*anyopaque) void {
     while (true) {
         var rx = board.uart.getc_noblock(); //clear uart rx-isr
         if (rx != null) {
-            // board.uart.putc(rx.?);
-            _ = librb.rb_put(&uart_rx_rb, @ptrCast(*anyopaque, &rx), 1);
-            uart_rx_sem.release();
+            rtfinsh.finsh_console_input_char(rx.?);
         } else {
             break;
         }
@@ -82,22 +78,4 @@ export fn rt_hw_console_output(s: [*c]const u8) void {
     while (str.* != 0) : (str += 1) {
         board.uart.putc(str.*);
     }
-}
-
-// port for rtthread
-export fn rt_hw_console_getchar() u8 {
-    var rx: u8 = undefined;
-
-    uart_rx_sem.take(-1);
-
-    if (librb.rb_data_length(&uart_rx_rb) > 0) {
-        _ = librb.rb_get(&uart_rx_rb, @ptrCast(*anyopaque, &rx), 1);
-    } else {
-        board.uart.puts("warn: should be not happen");
-
-        mr.thread.sleepMs(100);
-        return @bitCast(u8, @as(i8, -1));
-    }
-
-    return rx;
 }
