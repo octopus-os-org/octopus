@@ -24,8 +24,6 @@
 #define RT_DEBUG
 #define RT_DEBUG_INIT_CONFIG
 #define RT_DEBUG_INIT 1
-#define RT_DEBUG_IPC_CONFIG
-#define RT_DEBUG_IPC 1
 #define RT_DEBUG_MEM_CONFIG
 #define RT_DEBUG_MEM 1
 #define RT_DEBUG_SLAB_CONFIG
