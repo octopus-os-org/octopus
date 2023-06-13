@@ -17,7 +17,7 @@
  * 2019-07-03     yangjie      add __rt_ffs() for armclang.
  * 2022-06-12     jonas        fixed __rt_ffs() for armclang.
  * 
- * 2023-06-05     Vano         adapt for mr
+ * 2023-06-05     Vano         adapt for octopus
  * 
  */
 

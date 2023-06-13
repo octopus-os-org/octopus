@@ -1,7 +1,7 @@
 const std = @import("std");
 
-const rttroot = "src/mr/rtthread/";
-const rpwd = "src/mr/rtthread/components/";
+const rttroot = "src/octopus/rtthread/";
+const rpwd = "src/octopus/rtthread/components/";
 
 pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     const mobj = genFinshObject(b);

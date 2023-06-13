@@ -1,7 +1,7 @@
 const std = @import("std");
 const components = @import("components/subuild.zig");
 
-const rpwd = "src/mr/rtthread/";
+const rpwd = "src/octopus/rtthread/";
 
 pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     const rtt = genRttObject(b);

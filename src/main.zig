@@ -1,10 +1,9 @@
 const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
-// const cc = @import("./mr/cpu/arm/cortex_m4.zig");
-const chip = @import("./mr/chip/st/stm32f407vet6.zig");
 
-const mr = @import("mr/mr.zig");
+const chip = @import("./octopus/chip/st/stm32f407vet6.zig");
+const os = @import("octopus/octopus.zig");
 
 const rtfinsh = @cImport({
     @cInclude("finsh.h");
@@ -24,9 +23,9 @@ pub fn main() void {
     board.init();
 
     board.uart.putc(':');
-    board.uart.puts("Going to initialize mr\r\n");
+    board.uart.puts("Going to initialize octopus\r\n");
 
-    mr.startup(&_app_entry);
+    os.startup(&_app_entry);
 
     // regs.SCB.ICSR.modify(.{ .PENDSVSET = 1 });
 

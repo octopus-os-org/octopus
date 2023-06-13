@@ -1,5 +1,5 @@
 const std = @import("std");
-const rt = @import("src/mr/subuild.zig");
+const rt = @import("src/octopus/subuild.zig");
 
 pub fn build(b: *std.build.Builder) void {
     // Standard target options allows the person running `zig build` to choose
