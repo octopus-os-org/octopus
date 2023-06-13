@@ -1,4 +1,4 @@
-.global _initial
+.global _startup
 
 .extern InterruptHandler
 
@@ -8,18 +8,16 @@
 .extern resetHandler
 
 @ .equ _intHandler, InterruptHandler
-@ .equ _resetHandler, _initial
+@ .equ _resetHandler, _startup
 
-.thumb_set _resetHandler,_initial
+.thumb_set _resetHandler,_startup
 .thumb_set _intHandler,InterruptHandler
-
-
 
 .section .vector_table,"a",%progbits
 .type  _vector_table, %object
 _vector_table:
     .word  _stack_end /*_estack */
-    .word  _resetHandler /*_initial */
+    .word  _resetHandler /*_startup */
     .word  _intHandler /*NMI_Handler */
     .word  _intHandler /*HardFault_Handler */
     .word  _intHandler /*MemManage_Handler */
@@ -120,7 +118,7 @@ _vector_table:
     .word  _intHandler    /* FPU                          */
 
 .section .text
-.type  _initial, %function
-_initial:
+.type  _startup, %function
+_startup:
   ldr   sp, =_stack_end     /* set stack pointer */
   b resetHandler

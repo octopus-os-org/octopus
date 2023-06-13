@@ -9,7 +9,7 @@ const finsh = @cImport({
     @cInclude("shell.h");
 });
 
-const cpu = @import("cpu/arm/cortex_m4.zig");
+const cpu = @import("chip/arch/arm/cortex_m4.zig");
 
 var main_thread = thread.Thread{};
 var main_thread_stack: [2048]u8 align(8) = undefined;

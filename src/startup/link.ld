@@ -23,7 +23,7 @@
  */
 
 /* Define the entry point of the output file. */
-ENTRY(_initial)
+ENTRY(_startup)
 
 /* Define memory regions. */
 MEMORY

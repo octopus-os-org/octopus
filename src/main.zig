@@ -1,8 +1,8 @@
 const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
-const cc = @import("./mr/cpu/arm/cortex_m4.zig");
-const chip = @import("./mr/cpu/stm32f407vet6.zig");
+// const cc = @import("./mr/cpu/arm/cortex_m4.zig");
+const chip = @import("./mr/chip/st/stm32f407vet6.zig");
 
 const mr = @import("mr/mr.zig");
 
@@ -37,8 +37,8 @@ pub fn _app_entry(p: ?*anyopaque) void {
     // enable uart rx int
 
     irq_handler_table[chip.IrqId.USART2] = uart2_irq_handler;
-    _ = cc.irq.set_irq_priority(chip.IrqId.USART2, 150) catch {};
-    _ = cc.irq.enable_irq(chip.IrqId.USART2) catch {};
+    _ = chip.irq.set_irq_priority(chip.IrqId.USART2, 150) catch {};
+    _ = chip.irq.enable_irq(chip.IrqId.USART2) catch {};
 
     board.uart.puts("Going to run app\r\n");
 
@@ -60,7 +60,7 @@ fn uart2_irq_handler(irq_id: u8, p: ?*anyopaque) void {
 }
 
 export fn InterruptHandler() callconv(.C) void {
-    var irqid = cc.irq.get_current_executing_irqid();
+    var irqid = chip.irq.get_current_executing_irqid();
 
     if (irq_handler_table[irqid]) |handler| {
         handler(irqid, null);
