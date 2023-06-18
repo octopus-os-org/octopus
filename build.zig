@@ -60,8 +60,14 @@ pub fn build(b: *std.build.Builder) void {
     const elf_tests = b.addTest("src/startup.zig");
 
     rt.test_subuild(b, elf_tests);
+
+    elf_tests.addIncludePath("src/lib/ringbuffer");
+    elf_tests.addCSourceFile("src/lib/ringbuffer/rb.c", &[_][]const u8{"-std=c11"});
+
     elf_tests.addAssemblyFile("src/startup/startup.s");
     elf_tests.setLinkerScriptPath(.{ .path = "src/startup/link.ld" });
+
+
 
     elf_tests.setTarget(target);
     elf_tests.setBuildMode(mode);

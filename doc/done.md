@@ -1,1 +1,4 @@
 - add irq abstraction (cpu level)
+- add pin abstraction (cpu level)
+- add gpio abstraction (cpu level)
+- using heap on rtthread

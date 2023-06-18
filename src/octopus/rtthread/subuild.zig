@@ -56,14 +56,16 @@ fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
 }
 
 pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
-    _ = b;
-    t.addIncludePath(rpwd ++ "port");
+    components.test_subuild(b,t);
+
+    t.addIncludePath(rpwd ++ "components/finsh"); // optional
+    t.addIncludePath(rpwd);
     t.addIncludePath(rpwd ++ "include");
 
     const cflags = &[_][]const u8{"-std=c11"};
 
     // port source files
-    t.addCSourceFile(rpwd ++ "port/start.c", cflags);
+    t.addCSourceFile(rpwd ++ "start.c", cflags);
 
     // chip-specific source files
     t.addAssemblyFile(rpwd ++ "cpu/arm/cortex-m4/context.s");
@@ -83,4 +85,5 @@ pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     t.addCSourceFile(rpwd ++ "src/slab.c", cflags);
     t.addCSourceFile(rpwd ++ "src/thread.c", cflags);
     t.addCSourceFile(rpwd ++ "src/timer.c", cflags);
+
 }

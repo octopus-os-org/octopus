@@ -1,7 +1,9 @@
 const regs = @import("../../chip/register/register.zig");
 
+const chip = @import("../../octopus/chip/st/stm32f407vet6.zig");
+
 // uart2
-pub fn init() void {
+pub fn init() !void {
     // Init pin and uart
 
     // Enable clock
@@ -9,8 +11,8 @@ pub fn init() void {
     regs.RCC.APB1ENR.modify(.{ .USART2EN = 1 });
 
     // Set pin 2/3 mode to Alternate function mode
-    regs.GPIOA.MODER.modify(.{ .MODER2 = 0b10, .MODER3 = 0b10 });
-    regs.GPIOA.AFRL.modify(.{ .AFRL2 = 0b0111, .AFRL3 = 0b0111 });
+    try chip.pinmgr.pinmgr_set_pin_mux(try chip.pinid.pin_id_from_hrs("A02"), 0b0111);
+    try chip.pinmgr.pinmgr_set_pin_mux(try chip.pinid.pin_id_from_hrs("A03"), 0b0111);
 
     // Init uart (115200)
     regs.USART2.CR1.modify(.{ .UE = 0 });
