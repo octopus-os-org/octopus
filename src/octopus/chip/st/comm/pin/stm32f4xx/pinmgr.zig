@@ -43,14 +43,6 @@ pub fn pinmgr_set_pin_mux(pin_id: u16, pin_mux: u8) !void {
     af_reg.* = base.modify_bits_of(u32, oldVal, 0xF, @truncate(u5, 4 * (port % 8)), afVal);
 }
 
-const _s = packed struct {
-    // mode:u1,
-    // output_type:u1,
-    // output_speed:u2,
-    pupd: u2,
-    _reserved: u2,
-};
-
 /// set pin electrical characteristics
 pub fn pinmgr_set_pin_ec(pin_id: u16, pin_ec: anytype) !void {
     _ = pin_id;
