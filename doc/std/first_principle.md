@@ -1,0 +1,3 @@
+- if refer to sth, it needs id (handle)
+    - the id should be generic (for outer)
+    - the id should be unique （for outer)

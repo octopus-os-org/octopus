@@ -2,3 +2,4 @@
 - add pin abstraction (cpu level)
 - add gpio abstraction (cpu level)
 - using heap on rtthread
+- add adc abstraction (cpu level) (weak)
