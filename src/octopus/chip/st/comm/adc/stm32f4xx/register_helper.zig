@@ -9,7 +9,7 @@ pub fn RegisterRW(comptime Read: type, comptime Write: type) type {
         const Self = @This();
 
         pub fn init(address: usize) Self {
-            return Self{ .raw_ptr = @intToPtr(*volatile u32, address) };
+            return Self{ .raw_ptr = @as(*volatile u32, @ptrFromInt(address)) };
         }
 
         pub fn initRange(address: usize, comptime dim_increment: usize, comptime num_registers: usize) [num_registers]Self {
@@ -22,11 +22,11 @@ pub fn RegisterRW(comptime Read: type, comptime Write: type) type {
         }
 
         pub fn read(self: Self) Read {
-            return @bitCast(Read, self.raw_ptr.*);
+            return @as(Read, @bitCast(self.raw_ptr.*));
         }
 
         pub fn write(self: Self, value: Write) void {
-            self.raw_ptr.* = @bitCast(u32, value);
+            self.raw_ptr.* = @as(u32, @bitCast(value));
         }
 
         pub fn modify(self: Self, new_value: anytype) void {

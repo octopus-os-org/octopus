@@ -21,7 +21,7 @@ const GpioPinRep = struct {
         }
 
         // mode
-        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_MODE), 0b11, @truncate(u5, 2 * port), mode);
+        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_MODE), 0b11, @as(u5, @truncate(2 * port)), mode);
     }
 
     pub fn set_ec(self: Self, ec: GpioPinEc) void {
@@ -29,14 +29,14 @@ const GpioPinRep = struct {
         var port = pinid.get_port(self.pin_id);
 
         // mode
-        // base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_MODE), 0b11, @truncate(u5, 2 * port), mode);
+        // base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_MODE), 0b11, @as(u5, 2 * port), mode);
 
         // output type
-        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OTYPE), 0b1, @truncate(u5, port), ec.output_type);
+        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OTYPE), 0b1, @as(u5, port), ec.output_type);
         // output speed
-        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OSPEED), 0b11, @truncate(u5, 2 * port), ec.output_speed);
+        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OSPEED), 0b11, @as(u5, 2 * port), ec.output_speed);
         // push-up push-down
-        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_PUPD), 0b11, @truncate(u5, 2 * port), ec.pupd);
+        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_PUPD), 0b11, @as(u5, 2 * port), ec.pupd);
     }
     pub fn get_ec(self: Self) GpioPinEc {
         var group = pinid.get_group(self.pin_id);
@@ -44,11 +44,11 @@ const GpioPinRep = struct {
         var ec: GpioPinEc = undefined;
 
         // output type
-        ec.output_type = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OTYPE), 0b1, @truncate(u5, port));
+        ec.output_type = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OTYPE), 0b1, @as(u5, port));
         // output speed
-        ec.output_speed = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OSPEED), 0b11, @truncate(u5, 2 * port));
+        ec.output_speed = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OSPEED), 0b11, @as(u5, 2 * port));
         // push-up push-down
-        ec.pupd = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_PUPD), 0b11, @truncate(u5, 2 * port));
+        ec.pupd = base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_PUPD), 0b11, @as(u5, 2 * port));
 
         return ec;
     }
@@ -56,19 +56,19 @@ const GpioPinRep = struct {
     pub fn set_output(self: Self, val: anytype) void {
         var group = pinid.get_group(self.pin_id);
         var port = pinid.get_port(self.pin_id);
-        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OD), 0b1, @truncate(u5, port), val);
+        base.modify_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OD), 0b1, @as(u5, @truncate(port)), val);
     }
 
     pub fn get_output(self: Self) u1 {
         var group = pinid.get_group(self.pin_id);
         var port = pinid.get_port(self.pin_id);
-        return @truncate(u1, base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OD), 0b1, @truncate(u5, port)));
+        return @as(u1,@truncate(base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_OD), 0b1, @as(u5, @truncate(port)))));
     }
 
     pub fn get_input(self: Self) u1 {
         var group = pinid.get_group(self.pin_id);
         var port = pinid.get_port(self.pin_id);
-        return @truncate(u1, base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_ID), 0b1, @truncate(u5, port)));
+        return @as(u1, base.read_reg_bits(u32, base.gpiox_reg_ptr(group, base.GPIO_REG_ID), 0b1, @as(u5, port)));
     }
 };
 

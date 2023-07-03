@@ -1,9 +1,9 @@
 const rh = @import("register_helper.zig");
 
-const nvic_iser_base_addr = @intToPtr(*u32, 0xE000E100);
-const nvic_icer_base_addr = @intToPtr(*u32, 0xE000E180);
+const nvic_iser_base_addr = @as(*u32, @ptrFromInt(0xE000E100));
+const nvic_icer_base_addr = @as(*u32, @ptrFromInt(0xE000E180));
 
-const nvic_ipr_base_addr = @intToPtr(*u32, 0xE000E400);
+const nvic_ipr_base_addr = @as(*u32, @ptrFromInt(0xE000E400));
 
 /// config interrupt priority of irq_id (which is exception number)
 /// attention: can only handle irq_id [16..]
@@ -18,7 +18,7 @@ inline fn write_reg_8bit_of_irqn(regbase: *u32, irqn: u8, val: u8) void {
     // using byte access
     var h = irqn >> 3; // irqn / 8
 
-    @ptrCast([*c]u8, regbase)[h] = val;
+    @as([*c]u8, @ptrCast(regbase))[h] = val;
 }
 
 /// enable irq of irq_id (which is exception number)
@@ -42,11 +42,11 @@ inline fn write_1_to_regbit_of_irqn(regbase: *u32, irqn: u8) void {
     var l = irqn & 0x1F; // irqn % 32
 
     // read
-    var cur = @ptrCast([*c]u32, regbase)[h];
+    var cur = @as([*c]u32, regbase)[h];
     // modify
-    cur = cur | @as(u32, 1) << @truncate(u5, l);
+    cur = cur | @as(u32, 1) << @as(u5, @truncate(l));
     // write
-    @ptrCast([*c]u32, regbase)[h] = cur;
+    @as([*c]u32, regbase)[h] = cur;
 }
 
 inline fn check_irq_id(irq_id: u8) !u8 {

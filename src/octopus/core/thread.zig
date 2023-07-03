@@ -15,7 +15,7 @@ pub const Thread = struct {
         self._thread_entry = entry;
         self._thread_entry_param = entry_param;
 
-        var ret = rt.rt_thread_init(&self._rt_thread, @ptrCast([*c]const u8, name), &_rt_thread_entry, self, @ptrCast(?*anyopaque, &stack[0]), stack.len, priority, tick);
+        var ret = rt.rt_thread_init(&self._rt_thread, @as([*c]const u8, @ptrCast(name)), &_rt_thread_entry, self, @as(?*anyopaque, &stack[0]), stack.len, priority, tick);
         if (ret != rt.RT_EOK) {
             return error.Failure;
         }
@@ -31,7 +31,7 @@ pub const Thread = struct {
 
 // rt thread function
 fn _rt_thread_entry(p: ?*anyopaque) callconv(.C) void {
-    const t = @intToPtr(*Thread, @ptrToInt(p.?));
+    const t = @as(*Thread, @alignCast(@ptrCast(p.?)));
 
     t._thread_entry(t._thread_entry_param);
 }
@@ -41,5 +41,5 @@ pub fn sleep(ticks: u32) void {
 }
 
 pub fn sleepMs(ms: u32) void {
-    sleep(rt.rt_tick_from_millisecond(@bitCast(i32, ms)));
+    sleep(rt.rt_tick_from_millisecond(@as(i32, @bitCast(ms))));
 }

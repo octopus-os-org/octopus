@@ -2,11 +2,11 @@
 
 /// 0 represents GPIOA, and so on
 pub inline fn get_group(pin_id: u16) u8 {
-    return @truncate(u8, (pin_id & 0xFF00) >> 8);
+    return @as(u8, @truncate((pin_id & 0xFF00) >> 8));
 }
 /// 0 represents IO0, and so on
 pub inline fn get_port(pin_id: u16) u8 {
-    return @truncate(u8, (pin_id & 0xFF));
+    return @as(u8, @truncate((pin_id & 0xFF)));
 }
 
 /// pin range: GPIOA-GPIOK, IO0-IO15

@@ -20,8 +20,8 @@ pub fn startup(main_entry: thread.ThreadEntry) void {
     // board level initialization
     // NOTE: please initialize heap inside board initialization.
     //rt_hw_board_init(heap_begin, heap_end);
-    const heap_begin: *u32 = @intToPtr(*u32, 0x10000000);
-    const heap_end: *u32 = @intToPtr(*u32, 0x10000000 + 0x10000); // 64KB
+    const heap_begin: *u32 = @ptrFromInt(0x10000000);
+    const heap_end: *u32 = @ptrFromInt(0x10000000 + 0x10000); // 64KB
 
     rt.rt_system_heap_init(heap_begin, heap_end);
 

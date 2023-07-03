@@ -41,7 +41,7 @@ pub fn getc_noblock() ?u8 {
     const uart = regs.USART2;
 
     if (uart.SR.read().RXNE == 1) {
-        return @truncate(u8, uart.DR.read().DR);
+        return @as(u8, @truncate(uart.DR.read().DR));
     }
     return null;
 }

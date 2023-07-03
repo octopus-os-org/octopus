@@ -33,7 +33,7 @@ pub fn adcmgr_start_and_wait_channel_once(adc_id: adcid.AdcId) u16 {
     adc.CR2.modify(.{ .ADON = 1 });
 
     // set the channel to be converted
-    adc.SQR3.modify(.{ .SQ1 = @truncate(u5, adc_id.channel) });
+    adc.SQR3.modify(.{ .SQ1 = @as(u5, @truncate(adc_id.channel)) });
 
     // start the conversion
     adc.CR2.modify(.{ .SWSTART = 1 });

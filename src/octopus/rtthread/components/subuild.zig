@@ -3,11 +3,11 @@ const std = @import("std");
 const rttroot = "src/octopus/rtthread/";
 const rpwd = "src/octopus/rtthread/components/";
 
-pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
-    const mobj = genFinshObject(b);
+pub fn subuild(b: *std.build.Builder, t: *std.Build.Step.Compile) void {
+    const mobj = genFinshObject(b, t);
 
-    mobj.setTarget(t.target);
-    mobj.setBuildMode(std.builtin.Mode.ReleaseFast); // must
+    // mobj.setTarget(t.target);
+    // mobj.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
     t.addIncludePath(rttroot);
     t.addIncludePath(rttroot ++ "include");
@@ -15,8 +15,12 @@ pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     t.addObject(mobj);
 }
 
-fn genFinshObject(b: *std.build.Builder) *std.build.LibExeObjStep {
-    const mobj = b.addObject("finsh-obj", null);
+fn genFinshObject(b: *std.build.Builder, t: *std.Build.Step.Compile) *std.Build.Step.Compile {
+    const mobj = b.addObject(.{
+        .name = "obj-finsh",
+        .target = t.target,
+        .optimize = std.builtin.Mode.ReleaseFast, // must
+    });
     const cflags = &[_][]const u8{"-std=c11"};
 
     // set outside
@@ -40,7 +44,7 @@ fn genFinshObject(b: *std.build.Builder) *std.build.LibExeObjStep {
     return mobj;
 }
 
-pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
+pub fn test_subuild(b: *std.build.Builder, t: *std.Build.Step.Compile) void {
     _ = b;
     const cflags = &[_][]const u8{"-std=c11"};
 

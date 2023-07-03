@@ -90,11 +90,11 @@ pub fn config(ticks: u24, clk_source: ClockSourceEnum) void {
     STK.VAL.write_raw(0);
     // set clock source (),
     // enable interrupt,
-    STK.CTRL.modify(.{ .CLKSOURCE = @enumToInt(clk_source), .TICKINT = 1 });
+    STK.CTRL.modify(.{ .CLKSOURCE = @intFromEnum(clk_source), .TICKINT = 1 });
 }
 
 pub fn set_clock_source(clk_source: ClockSourceEnum) void {
-    STK.CTRL.modify(.{ .CLKSOURCE = @enumToInt(clk_source) });
+    STK.CTRL.modify(.{ .CLKSOURCE = @intFromEnum(clk_source) });
 }
 
 pub fn set_interrupt(enable_irq: bool, priority: u8) void {

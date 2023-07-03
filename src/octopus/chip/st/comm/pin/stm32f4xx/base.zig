@@ -12,7 +12,7 @@ pub inline fn gpiox_base_addr(group: u8) u32 {
 }
 
 pub inline fn gpiox_reg_ptr(group: u8, reg: anytype) *u32 {
-    return @intToPtr(*u32, gpiox_base_addr(group) + reg);
+    return @as(*u32, @ptrFromInt(gpiox_base_addr(group) + reg));
 }
 
 /// very common utility function

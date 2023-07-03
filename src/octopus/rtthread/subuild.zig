@@ -3,11 +3,11 @@ const components = @import("components/subuild.zig");
 
 const rpwd = "src/octopus/rtthread/";
 
-pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
-    const rtt = genRttObject(b);
+pub fn subuild(b: *std.Build, t: *std.Build.Step.Compile) void {
+    const rtt = genRttObject(b, t);
 
-    rtt.setTarget(t.target);
-    rtt.setBuildMode(std.builtin.Mode.ReleaseFast); // must
+    // rtt.setTarget(t.target);
+    // rtt.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
     rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
     t.addIncludePath(rpwd);
@@ -17,13 +17,13 @@ pub fn subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     components.subuild(b, t);
 }
 
-fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
-    const rtt = b.addObject("rtthread-obj", null);
+fn genRttObject(b: *std.Build, t: *std.Build.Step.Compile) *std.Build.Step.Compile {
+    const rtt = b.addObject(.{
+        .name = "obj-rtthread",
+        .target = t.target,
+        .optimize = std.builtin.Mode.ReleaseFast, // must
+    });
     const cflags = &[_][]const u8{"-std=c11"};
-
-    // set outside
-    // rtt.setTarget(target);
-    // rtt.setBuildMode(std.builtin.Mode.ReleaseFast);
 
     // include path
     rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
@@ -55,8 +55,8 @@ fn genRttObject(b: *std.build.Builder) *std.build.LibExeObjStep {
     return rtt;
 }
 
-pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
-    components.test_subuild(b,t);
+pub fn test_subuild(b: *std.Build, t: *std.Build.Step.Compile) void {
+    components.test_subuild(b, t);
 
     t.addIncludePath(rpwd ++ "components/finsh"); // optional
     t.addIncludePath(rpwd);
@@ -85,5 +85,4 @@ pub fn test_subuild(b: *std.build.Builder, t: *std.build.LibExeObjStep) void {
     t.addCSourceFile(rpwd ++ "src/slab.c", cflags);
     t.addCSourceFile(rpwd ++ "src/thread.c", cflags);
     t.addCSourceFile(rpwd ++ "src/timer.c", cflags);
-
 }

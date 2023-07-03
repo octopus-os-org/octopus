@@ -27,5 +27,5 @@ pub const IrqId = struct {
 // };
 
 // test "set enum ordinal value" {
-//     try expect(@enumToInt(IrqIdEnum.Reset) == 1);
+//     try expect(@intFromEnum(IrqIdEnum.Reset) == 1);
 // }

@@ -26,21 +26,21 @@ pub fn pinmgr_set_pin_mux(pin_id: u16, pin_mux: u8) !void {
     } else {
         // alternate
         modeVal = 0b10;
-        afVal = @truncate(u4, pin_mux & 0xF);
+        afVal = @as(u4, @truncate(pin_mux & 0xF));
     }
 
     var gpioBaseAddr = base.gpiox_base_addr(pinid.get_group(pin_id));
     var port = pinid.get_port(pin_id);
 
     // set pin mode
-    var mode_reg = @intToPtr(*u32, gpioBaseAddr + GPIO_MODE_REG_AO);
+    var mode_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_MODE_REG_AO));
     var oldVal = mode_reg.*;
-    mode_reg.* = base.modify_bits_of(u32, oldVal, 0x3, @truncate(u5, 2 * port), modeVal);
+    mode_reg.* = base.modify_bits_of(u32, oldVal, 0x3, @as(u5, @truncate(2 * port)), modeVal);
 
     // set alternate
-    var af_reg = @intToPtr(*u32, gpioBaseAddr + GPIO_AFRL_REG_AO + port / 8);
+    var af_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_AFRL_REG_AO + port / 8));
     oldVal = af_reg.*;
-    af_reg.* = base.modify_bits_of(u32, oldVal, 0xF, @truncate(u5, 4 * (port % 8)), afVal);
+    af_reg.* = base.modify_bits_of(u32, oldVal, 0xF, @as(u5, @truncate(4 * (port % 8))), afVal);
 }
 
 /// set pin electrical characteristics
