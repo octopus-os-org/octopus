@@ -2,8 +2,8 @@ const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
 
-const chip = @import("./octopus/chip/st/stm32f407vet6.zig");
-const os = @import("octopus/octopus.zig");
+const chip = @import("octopus").chip.st.stm32f407vet6;
+const os = @import("octopus");
 
 const rtfinsh = @cImport({
     @cInclude("finsh.h");

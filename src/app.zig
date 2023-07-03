@@ -1,11 +1,11 @@
 const regs = @import("chip/register/register.zig");
 const periph = @import("chip/peripheral/peripheral.zig");
 const board = @import("board/board.zig");
-const os = @import("octopus/octopus.zig");
+const os = @import("octopus");
 
 const std = @import("std");
 
-const chip = @import("./octopus/chip/st/stm32f407vet6.zig");
+const chip = @import("octopus").chip.st.stm32f407vet6;
 
 var _buffer: [256]u8 = undefined;
 

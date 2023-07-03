@@ -1,7 +1,7 @@
 // ref: https://github.com/lmbarros/pi3-zig-simplest-bare-metal/blob/master/build.zig
 
 const std = @import("std");
-const rt = @import("src/octopus/subuild.zig");
+const octopus = @import("octopus/subuild.zig");
 
 pub fn build(b: *std.Build) void {
     // ----------------------------------------------------------------
@@ -40,8 +40,9 @@ pub fn build(b: *std.Build) void {
     // step when running `zig build`).
     b.installArtifact(elf);
 
-    // add rtthread
-    rt.subuild(b, elf);
+    // subuild
+    // add octopus
+    octopus.subuild(b, elf);
 
     // add other files
     elf.addAssemblyFile("src/startup/startup.s");

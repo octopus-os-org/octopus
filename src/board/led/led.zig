@@ -1,6 +1,6 @@
 const regs = @import("../../chip/register/register.zig");
 
-const chip = @import("../../octopus/chip/st/stm32f407vet6.zig");
+const chip = @import("octopus").chip.st.stm32f407vet6;
 // GPIOA12
 
 pub fn init() !void {

@@ -21,7 +21,7 @@ fn get_adc(adc: anytype) ?*const reg.ADCx {
 }
 
 pub fn adcmgr_init() void {
-    // todo optmize
+    // todo optimize
     // configure clock 14 = 84/6 (max clock is 14MHz)
     reg.C_ADC.CCR.modify(.{ .ADCPRE = 0b10 });
 }

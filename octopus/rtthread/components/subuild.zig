@@ -1,7 +1,7 @@
 const std = @import("std");
 
-const rttroot = "src/octopus/rtthread/";
-const rpwd = "src/octopus/rtthread/components/";
+const rttroot = "octopus/rtthread/";
+const rpwd = "octopus/rtthread/components/";
 
 pub fn subuild(b: *std.build.Builder, t: *std.Build.Step.Compile) void {
     const mobj = genFinshObject(b, t);
@@ -42,23 +42,4 @@ fn genFinshObject(b: *std.build.Builder, t: *std.Build.Step.Compile) *std.Build.
     // mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/rb.c", cflags);
 
     return mobj;
-}
-
-pub fn test_subuild(b: *std.build.Builder, t: *std.Build.Step.Compile) void {
-    _ = b;
-    const cflags = &[_][]const u8{"-std=c11"};
-
-    // include path
-    t.addIncludePath(rttroot);
-    t.addIncludePath(rttroot ++ "include");
-    t.addIncludePath(rpwd ++ "finsh");
-
-    // core source files
-    t.addCSourceFile(rpwd ++ "finsh/cmd.c", cflags);
-    t.addCSourceFile(rpwd ++ "finsh/msh_parse.c", cflags);
-    t.addCSourceFile(rpwd ++ "finsh/msh.c", cflags);
-    t.addCSourceFile(rpwd ++ "finsh/shell.c", cflags);
-
-    t.addCSourceFile(rpwd ++ "finsh/enc_finsh/enc_finsh.c", cflags);
-    // mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/rb.c", cflags);
 }
