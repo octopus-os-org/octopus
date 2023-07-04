@@ -1,4 +1,4 @@
-const rh = @import("register_helper.zig");
+const rh = @import("util");
 
 /// Common ADC registers
 pub const C_ADC = struct {

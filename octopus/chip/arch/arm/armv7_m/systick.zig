@@ -1,4 +1,4 @@
-const rh = @import("register_helper.zig");
+const rh = @import("util");
 const scb = @import("scb.zig");
 
 /// SysTick timer

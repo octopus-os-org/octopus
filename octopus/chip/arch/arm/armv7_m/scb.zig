@@ -1,4 +1,5 @@
-const rh = @import("register_helper.zig");
+const rh = @import("util");
+
 const constants = @import("const.zig");
 
 /// System control block

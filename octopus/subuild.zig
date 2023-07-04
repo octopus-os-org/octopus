@@ -11,8 +11,13 @@ fn genModule(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.M
     _ = target;
     _ = optimize;
 
+    const miutil = b.createModule(.{
+        .source_file = .{ .path = "octopus/util/util.zig" },
+    });
+
     const m = b.addModule("octopus", .{
         .source_file = .{ .path = "octopus/octopus.zig" },
+        .dependencies = &[_]std.Build.ModuleDependency{.{ .name = "util", .module = miutil }},
     });
 
     return m;

@@ -1,5 +1,3 @@
-const rh = @import("register_helper.zig");
-
 const nvic_iser_base_addr = @as(*u32, @ptrFromInt(0xE000E100));
 const nvic_icer_base_addr = @as(*u32, @ptrFromInt(0xE000E180));
 
