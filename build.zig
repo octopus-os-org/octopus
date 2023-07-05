@@ -1,54 +1,15 @@
 // ref: https://github.com/lmbarros/pi3-zig-simplest-bare-metal/blob/master/build.zig
 
 const std = @import("std");
-const octopus = @import("octopus/subuild.zig");
+const octopus = @import("octopus/obuild.zig");
 
 pub fn build(b: *std.Build) void {
-    // ----------------------------------------------------------------
-    // ELF File
-    // ----------------------------------------------------------------
-
-    // Standard target options allows the person running `zig build` to choose
-    // what target to build for. Here we do not override the defaults, which
-    // means any target is allowed, and the default is native. Other options
-    // for restricting supported target set are available.
-    const target = b.standardTargetOptions(.{
-        .default_target = .{
-            .cpu_arch = std.Target.Cpu.Arch.thumb,
-            .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m4 },
-            .os_tag = std.Target.Os.Tag.freestanding,
-            .abi = std.Target.Abi.eabi,
-        },
-    });
-
-    // Standard optimization options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do not
-    // set a preferred release mode, allowing the user to decide how to optimize.
-    const optimize = b.standardOptimizeOption(.{});
-
-    const elf = b.addExecutable(.{
-        .name = "zig-program.elf",
-        // In this case the main source file is merely a path, however, in more
-        // complicated build scripts, this could be a generated file.
-        .root_source_file = .{ .path = "src/startup.zig" },
-        .target = target,
-        .optimize = optimize,
-    });
+    const elf = octopus.addOctopus(b, .{ .board = "wheeltec/c30d", .fileSource = .{ .path = "src/main.zig" } });
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
     b.installArtifact(elf);
-
-    // subuild
-    // add octopus
-    octopus.subuild(b, elf);
-
-    // add other files
-    elf.addAssemblyFile("src/startup/startup.s");
-
-    // add linker script
-    elf.setLinkerScriptPath(.{ .path = "src/startup/link.ld" });
 
     // std.debug.print("mode:{}\n", .{mode});
 

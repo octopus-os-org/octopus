@@ -3,3 +3,4 @@
 - add uart abstraction
 
 - 统一位寄存器bits操作 (modify)
+- find a solution to "conditional compilation" used for different implementations (e.g. hardware-specific)

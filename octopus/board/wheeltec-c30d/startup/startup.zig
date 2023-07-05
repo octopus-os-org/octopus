@@ -1,4 +1,4 @@
-const main = @import("main.zig");
+const app = @import("app");
 const builtin = @import("std").builtin;
 
 // These symbols come from the linker script
@@ -22,20 +22,20 @@ export fn resetHandler() callconv(.C) void {
     const bss_size = @as(u32, @intFromPtr(&_bss_end)) - @as(u32, @intFromPtr(&_bss_start));
     for (bss[0..bss_size]) |*b| b.* = 0;
 
-    // Call contained in main.zig
-    main.main();
+    // Call user application (entry)
+    app.main();
 
     unreachable;
 }
 
-const board = @import("board/board.zig");
+// const board = @import("board/board.zig");
 
-pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
-    @setCold(true);
-    _ = error_return_trace;
-    _ = ret_addr;
-    board.uart.puts("\n!KERNEL PANIC!\n");
-    board.uart.puts(msg);
-    board.uart.puts("\n");
-    while (true) {}
-}
+// pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
+//     @setCold(true);
+//     _ = error_return_trace;
+//     _ = ret_addr;
+//     board.uart.puts("\n!KERNEL PANIC!\n");
+//     board.uart.puts(msg);
+//     board.uart.puts("\n");
+//     while (true) {}
+// }
