@@ -49,8 +49,8 @@ pub fn genHardwareOptions(
     //
     // todo: find a better way to handle this
     const hsOption = b.addOptions();
-    hsOption.addOption([]const u8, "chip.id", "stm32f407vet6");
-    hsOption.addOption([]const u8, "chip.family", "stm32f4xx");
+    hsOption.addOption([]const u8, "chip.id", "stm32l475vet6");
+    hsOption.addOption([]const u8, "chip.family", "stm32l4xx");
 
     // hsOption.addOption([]const u8, "chip.vendor", "st");
 

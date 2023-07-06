@@ -1,0 +1,4 @@
+{% for irq in irqs %}
+/// {{irq.desc}}
+pub const {{irq.name}} = {{irq.number}};
+{% endfor %}

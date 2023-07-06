@@ -1,5 +1,23 @@
-const GPIOA_BASE_ADDR = 0x4002_0000;
+// todo: optimize
+// "bad smell"
+// is there anyway to inject value at comptime?
+const specific = struct {
+    const std = @import("std");
+    pub fn gpioa_base_addr(comptime chip_family: []const u8) u32 {
+        if (std.mem.eql(u8, chip_family, "stm32l4xx")) {
+            return 0x4800_0000;
+        } else if (std.mem.eql(u8, chip_family, "stm32f4xx")) {
+            return 0x4002_0000;
+        } else {
+            @compileError("unknown chip family");
+        }
+    }
+};
 
+const hs = @import("hs");
+const GPIOA_BASE_ADDR: u32 = specific.gpioa_base_addr(hs.@"chip.family");
+
+//0x4002_0000
 pub const GPIO_REG_MODE = 0;
 pub const GPIO_REG_OTYPE = 0x04;
 pub const GPIO_REG_OSPEED = 0x08;
