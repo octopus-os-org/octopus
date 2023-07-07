@@ -15,7 +15,7 @@
             "configFiles": [                  
                 "${workspaceRoot}/openocd.cfg"
             ],
-            "svdFile": "./doc/STM32L4R7.svd",
+            "svdFile": "./doc/STM32L4x5.svd",
             "showDevDebugOutput": "raw",
             "gdbPath":"D:/ToolChains/cross/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb.exe"
         }
