@@ -1,7 +1,7 @@
 # 执行时的工作目录应为项目根目录
 
 flashStartAddress="0x08000000"
-flashFile=`ls zig-out/bin/*.bin | head -n 1`
+flashFile=`ls zig-out/bin/*.elf | head -n 1`
 
 if [ $# == 1 ]; then
     flashFile=$1
@@ -18,5 +18,6 @@ echo "flashing file: ${flashFile}"
 openocd \
     -f interface/stlink.cfg \
     -f target/stm32l4x.cfg  \
-    -c "program ${flashFile} ${flashStartAddress} verify reset " \
-    -c "exit" 
+    -c "init" \
+    -c "reset halt" \
+    -c "program ${flashFile} ${flashStartAddress}" 

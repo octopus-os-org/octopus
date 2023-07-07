@@ -18,19 +18,21 @@ var main_thread_stack: [2048]u8 align(8) = undefined;
 pub fn startup(main_entry: thread.ThreadEntry) void {
     _ = rt.rt_hw_interrupt_disable();
 
+    // todo: remove hardware-specific details
+    // "bad smell"
     // board level initialization
     // NOTE: please initialize heap inside board initialization.
     //rt_hw_board_init(heap_begin, heap_end);
     const heap_begin: *u32 = @ptrFromInt(0x10000000);
-    const heap_end: *u32 = @ptrFromInt(0x10000000 + 0x10000); // 64KB
+    const heap_end: *u32 = @ptrFromInt(0x10000000 + 0x8000); // 32KB
 
     rt.rt_system_heap_init(heap_begin, heap_end);
 
     // . configure system tick
     // ticks = clockHZ / neededHZ
-    // x = 168000000 / 1000  = 168000  (168MHz, 1ms / per irq)
-    // clock = 168 / 8 = 21MHz
-    cpu.systick.config(210000, cpu.systick.ClockSourceEnum.ExternalReferenceClock);
+    // x = 80000000 / 100  = 800000  (80MHz, 10ms / per irq)
+    // 800000 / 8 = 100000
+    cpu.systick.config(100000, cpu.systick.ClockSourceEnum.ExternalReferenceClock);
     cpu.systick.enable();
 
     // show RT-Thread version

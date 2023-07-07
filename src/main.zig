@@ -22,8 +22,8 @@ pub fn main() void {
 
     _ = board.init() catch {};
 
-    board.uart.putc(':');
-    board.uart.puts("Going to initialize octopus\r\n");
+    // board.uart.putc(':');
+    // board.uart.puts("Going to initialize octopus\r\n");
 
     os.startup(&_app_entry);
     // regs.SCB.ICSR.modify(.{ .PENDSVSET = 1 });
@@ -32,16 +32,25 @@ pub fn main() void {
 }
 
 pub fn _app_entry(p: ?*anyopaque) void {
+    _ = p;
+
+    while (true) {
+        board.led.led_toggle();
+
+        // Sleep for some time
+        os.thread.sleepMs(500);
+    }
+
     // enable uart rx int
 
-    irq_handler_table[chip.IrqId.USART2] = uart2_irq_handler;
-    _ = chip.irq.set_irq_priority(chip.IrqId.USART2, 150) catch {};
-    _ = chip.irq.enable_irq(chip.IrqId.USART2) catch {};
+    // irq_handler_table[chip.IrqId.USART2] = uart2_irq_handler;
+    // _ = chip.irq.set_irq_priority(chip.IrqId.USART2, 150) catch {};
+    // _ = chip.irq.enable_irq(chip.IrqId.USART2) catch {};
 
-    board.uart.puts("Going to run app\r\n");
+    // board.uart.puts("Going to run app\r\n");
 
     // jump to app entry
-    app.app_entry(p);
+    // app.app_entry(p);
 }
 
 fn uart2_irq_handler(irq_id: u8, p: ?*anyopaque) void {
@@ -58,22 +67,23 @@ fn uart2_irq_handler(irq_id: u8, p: ?*anyopaque) void {
 }
 
 export fn InterruptHandler() callconv(.C) void {
-    var irqid = chip.irq.get_current_executing_irqid();
+    // var irqid = chip.irq.get_current_executing_irqid();
 
-    if (irq_handler_table[irqid]) |handler| {
-        handler(irqid, null);
-        return;
-    }
+    // if (irq_handler_table[irqid]) |handler| {
+    //     handler(irqid, null);
+    //     return;
+    // }
 
-    board.uart.puts("An Interrupt without handler occur\r\n");
-    board.uart.putc(irqid);
+    // board.uart.puts("An Interrupt without handler occur\r\n");
+    // board.uart.putc(irqid);
     while (true) {}
 }
 
 // port for rtthread
 export fn rt_hw_console_output(s: [*c]const u8) void {
-    var str = s;
-    while (str.* != 0) : (str += 1) {
-        board.uart.putc(str.*);
-    }
+    _ = s;
+    // var str = s;
+    // while (str.* != 0) : (str += 1) {
+    //     board.uart.putc(str.*);
+    // }
 }
