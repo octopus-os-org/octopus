@@ -15,7 +15,7 @@ echo "flashing file: ${flashFile}"
 # exit - 直接退出； 如无则会开启 gdb server 
 
 openocd \
-    -f interface/cmsis-dap.cfg \
-    -f target/stm32f4x.cfg  \
+    -f interface/stlink.cfg \
+    -f target/stm32l4x.cfg  \
     -c "program ${flashFile}  verify reset " \
     -c "exit" 

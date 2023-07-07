@@ -52,6 +52,9 @@ pub fn genHardwareOptions(
     hsOption.addOption([]const u8, "chip.id", "stm32l475vet6");
     hsOption.addOption([]const u8, "chip.family", "stm32l4xx");
 
+    hsOption.addOption(u32, "os.heap_addr_begin", 0x10000000);
+    hsOption.addOption(u32, "os.heap_addr_end", 0x10000000 + 0x8000); // 32KB
+
     // hsOption.addOption([]const u8, "chip.vendor", "st");
 
     return hsOption;

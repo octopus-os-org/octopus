@@ -4,7 +4,7 @@ const std = @import("std");
 const octopus = @import("octopus/obuild.zig");
 
 pub fn build(b: *std.Build) void {
-    const elf = octopus.addOctopus(b, .{ .board = "wheeltec/c30d", .fileSource = .{ .path = "src/main.zig" } });
+    const elf = octopus.addOctopus(b, .{ .board = "atk/pandora", .fileSource = .{ .path = "src/main.zig" } });
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
