@@ -10,30 +10,24 @@ const finsh = @cImport({
     @cInclude("shell.h");
 });
 
-const cpu = @import("chip/arch/arm/cortex_m4.zig");
+const hs = @import("hs");
 
 var main_thread = thread.Thread{};
 var main_thread_stack: [2048]u8 align(8) = undefined;
 
+// "not good smell"
+var isOsInitialized = false;
+
 pub fn startup(main_entry: thread.ThreadEntry) void {
     _ = rt.rt_hw_interrupt_disable();
 
-    // todo: remove hardware-specific details
-    // "bad smell"
-    // board level initialization
     // NOTE: please initialize heap inside board initialization.
     //rt_hw_board_init(heap_begin, heap_end);
-    const heap_begin: *u32 = @ptrFromInt(0x10000000);
-    const heap_end: *u32 = @ptrFromInt(0x10000000 + 0x8000); // 32KB
+
+    const heap_begin: *u32 = @ptrFromInt(hs.@"os.heap_addr_begin");
+    const heap_end: *u32 = @ptrFromInt(hs.@"os.heap_addr_end");
 
     rt.rt_system_heap_init(heap_begin, heap_end);
-
-    // . configure system tick
-    // ticks = clockHZ / neededHZ
-    // x = 80000000 / 100  = 800000  (80MHz, 10ms / per irq)
-    // 800000 / 8 = 100000
-    cpu.systick.config(100000, cpu.systick.ClockSourceEnum.ExternalReferenceClock);
-    cpu.systick.enable();
 
     // show RT-Thread version
     rt.rt_show_version();
@@ -59,6 +53,9 @@ pub fn startup(main_entry: thread.ThreadEntry) void {
     // idle thread initialization
     rt.rt_thread_idle_init();
 
+    //
+    isOsInitialized = true;
+
     // start scheduler
     rt.rt_system_scheduler_start();
 
@@ -66,11 +63,13 @@ pub fn startup(main_entry: thread.ThreadEntry) void {
 }
 
 export fn SysTickIrqHandler() callconv(.C) void {
-    //* enter interrupt */
-    rt.rt_interrupt_enter();
+    if (isOsInitialized) {
+        //* enter interrupt */
+        rt.rt_interrupt_enter();
 
-    rt.rt_tick_increase();
+        rt.rt_tick_increase();
 
-    //* leave interrupt */
-    rt.rt_interrupt_leave();
+        //* leave interrupt */
+        rt.rt_interrupt_leave();
+    }
 }

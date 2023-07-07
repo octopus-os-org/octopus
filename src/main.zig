@@ -18,8 +18,6 @@ const librb = @cImport({
 var irq_handler_table: [256]?*const fn (irq_id: u8, p: ?*anyopaque) void = undefined;
 
 pub fn main() void {
-    periph.clock.clock_init();
-
     _ = board.init() catch {};
 
     // board.uart.putc(':');
