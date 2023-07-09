@@ -13,3 +13,5 @@ const _adc = @import("comm/adc/stm32f4xx/adc.zig");
 
 pub const adcid = _adc.adcid;
 pub const adcmgr = _adc.adcmgr;
+
+pub const reg = @import("reg/reg.zig").stm32f407;

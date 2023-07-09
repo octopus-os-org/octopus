@@ -13,3 +13,5 @@ pub const gpio = _pin.gpio;
 
 // pub const adcid = _adc.adcid;
 // pub const adcmgr = _adc.adcmgr;
+
+pub const reg = @import("reg/reg.zig").stm32l4x5;
