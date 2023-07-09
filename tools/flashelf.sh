@@ -14,8 +14,17 @@ echo "flashing file: ${flashFile}"
 # reset - 执行复位
 # exit - 直接退出； 如无则会开启 gdb server 
 
+
+
 openocd \
-    -f interface/stlink.cfg \
-    -f target/stm32l4x.cfg  \
-    -c "program ${flashFile}  verify reset " \
-    -c "exit" 
+    -f interface/cmsis-dap.cfg \
+    -f target/stm32mp15x.cfg  \
+    -c "reset_config srst_only " \
+    -c "init" \
+    -c "reset halt" \
+    -c "load_image ${flashFile}" \
+    -c "set_reg {pc 0x2ffc2500}" \
+    -c "step" \
+    -c "set_reg {pc 0x2ffc2500}" \
+    -c "resume" \
+    -c "exit"
