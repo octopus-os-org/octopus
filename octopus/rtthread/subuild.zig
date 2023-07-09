@@ -31,7 +31,7 @@ fn genRttObject(b: *std.Build, t: *std.Build.Step.Compile) *std.Build.Step.Compi
     rtt.addIncludePath(rpwd ++ "include");
 
     // port source files
-    rtt.addCSourceFile(rpwd ++ "start.c", cflags);
+    // rtt.addCSourceFile(rpwd ++ "start.c", cflags);
 
     // chip-specific source files
     rtt.addAssemblyFile(rpwd ++ "cpu/arm/cortex-m4/context.s");
