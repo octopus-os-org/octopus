@@ -44,11 +44,12 @@ pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Bui
 }
 
 fn getBoardObuild(comptime board_name: []const u8) type {
-    const board_table = [_][]const u8{ "wheeltec/c30d", "atk/pandora" };
+    const board_table = [_][]const u8{ "wheeltec/c30d", "atk/pandora", "100ask/stm32mp157" };
 
     const board_obuild_table = [_]type{
         @import("board/wheeltec-c30d/startup/obuild.zig"),
         @import("board/atk-pandora/startup/obuild.zig"),
+        @import("board/100ask-stm32mp157/startup/obuild.zig"),
     };
 
     // find board info
