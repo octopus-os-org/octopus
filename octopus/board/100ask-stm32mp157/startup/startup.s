@@ -18,7 +18,7 @@ _vector_table:
     b . /* 0x18 IRQ */
     b . /* 0x1C FIQ */
 
-.section .text
+.section .text.startup
 _startup:
     msr cpsr_c, #0x13 /* be Supervisor mode */
     ldr sp, =_stack_end /* set sp */

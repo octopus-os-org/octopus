@@ -24,6 +24,7 @@ pub fn main() void {
 }
 
 fn led_init() void {
+    chipreg.RCC.RCC_MP_AHB4ENSETR.modify(.{ .GPIOAEN = 1 });
     chipreg.GPIOA.GPIOA_MODER.modify(.{ .MODER10 = 0b01 });
 }
 
