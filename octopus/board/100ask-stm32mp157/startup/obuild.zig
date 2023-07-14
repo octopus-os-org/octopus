@@ -12,7 +12,7 @@ pub fn genExecutableCompile(b: *std.Build, name: []const u8) *std.Build.Step.Com
     // for restricting supported target set are available.
     const target = b.standardTargetOptions(.{
         .default_target = .{
-            .cpu_arch = std.Target.Cpu.Arch.arm,
+            .cpu_arch = std.Target.Cpu.Arch.thumb,
             .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_a7 },
             .os_tag = std.Target.Os.Tag.freestanding,
             .abi = std.Target.Abi.eabi,

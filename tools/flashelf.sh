@@ -19,12 +19,10 @@ echo "flashing file: ${flashFile}"
 openocd \
     -f interface/cmsis-dap.cfg \
     -f target/stm32mp15x.cfg  \
-    -c "reset_config srst_only " \
     -c "init" \
-    -c "reset halt" \
+    -c "adapter srst delay 3100" \
+    -c "halt" \
     -c "load_image ${flashFile}" \
-    -c "set_reg {pc 0x2ffc2500}" \
-    -c "step" \
-    -c "set_reg {pc 0x2ffc2500}" \
+    -c "set_reg {pc 0xC0100000}" \
     -c "resume" \
     -c "exit"

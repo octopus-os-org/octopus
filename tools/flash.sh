@@ -1,6 +1,6 @@
 # 执行时的工作目录应为项目根目录
 
-flashStartAddress="0x2FFC2400"
+flashStartAddress="0xC0100000"
 flashFile=`ls zig-out/bin/*.bin | head -n 1`
 
 if [ $# == 1 ]; then
@@ -19,12 +19,10 @@ echo "flashing file: ${flashFile}"
 openocd \
     -f interface/cmsis-dap.cfg \
     -f target/stm32mp15x.cfg  \
-    -c "reset_config srst_only" \
     -c "init" \
-    -c "reset halt" \
+    -c "adapter srst delay 3100" \
+    -c "halt" \
     -c "load_image ${flashFile} ${flashStartAddress} bin" \
-    -c "set_reg {pc 0x2ffc2500}" \
-    -c "step" \
-    -c "set_reg {pc 0x2ffc2500}" \
+    -c "set_reg {pc 0xC0100000}" \
     -c "resume" \
     -c "exit"
