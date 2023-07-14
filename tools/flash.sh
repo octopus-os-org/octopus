@@ -1,6 +1,6 @@
 # 执行时的工作目录应为项目根目录
 
-flashStartAddress="0x2FFC2400"
+flashStartAddress="0x2FFC2500"
 flashFile=`ls zig-out/bin/*.bin | head -n 1`
 
 if [ $# == 1 ]; then
@@ -23,8 +23,6 @@ openocd \
     -c "init" \
     -c "reset halt" \
     -c "load_image ${flashFile} ${flashStartAddress} bin" \
-    -c "set_reg {pc 0x2ffc2500}" \
-    -c "step" \
     -c "set_reg {pc 0x2ffc2500}" \
     -c "resume" \
     -c "exit"
