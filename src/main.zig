@@ -2,7 +2,7 @@ const chip = @import("octopus").chip.st.stm32mp157x;
 
 const chipreg = chip.reg.devices.STM32MP157x.peripherals;
 
-// const os = @import("octopus");
+const mmc = @import("octopus").driver.mmc;
 
 const rtfinsh = @cImport({
     @cInclude("finsh.h");
@@ -14,12 +14,28 @@ const librb = @cImport({
 
 const std = @import("std");
 
+fn init_emmc() void {
+    var host = mmc.host.stsdmmc.StSdmmcHost{};
+    host.set_bus_400Khz();
+
+    var bhost = host.host();
+
+    _ = mmc.emmc_reinit(bhost, 0xC0FF8080, 6) catch {};
+}
+
 pub fn main() void {
     led_init();
 
+    init_emmc();
+
+    var i: u32 = 0;
     while (true) {
-        delay(80000);
-        led_toggle();
+        i += 1;
+
+        if (i > 500000) {
+            i = 0;
+            led_toggle();
+        }
     }
 }
 

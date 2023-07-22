@@ -1,0 +1,1 @@
+使用 gdb step / openocd step 命令似乎总是不能成功运行程序. continue / resume 则Ok
