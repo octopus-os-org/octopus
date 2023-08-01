@@ -1,0 +1,1 @@
+Be simple to understand and change while reliable and powerful

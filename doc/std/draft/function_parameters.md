@@ -1,0 +1,1 @@
+Less parameters: Must use structure to wrap the parameters when many parameters otherwise the raw parameters directly
