@@ -1,0 +1,1 @@
+An os is responsible for hardware management and serving applications
