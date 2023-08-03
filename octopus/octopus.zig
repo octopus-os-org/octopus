@@ -4,6 +4,8 @@ pub const chip = @import("chip/chip.zig");
 
 pub const driver = @import("drivers/drivers.zig");
 
+pub const util = @import("util/util.zig");
+
 const rt = @cImport({
     @cInclude("rtapi.h");
 });

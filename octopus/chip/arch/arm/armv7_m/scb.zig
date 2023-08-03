@@ -1,4 +1,4 @@
-const rh = @import("util");
+const rh = @import("octopus").util;
 
 const constants = @import("const.zig");
 
