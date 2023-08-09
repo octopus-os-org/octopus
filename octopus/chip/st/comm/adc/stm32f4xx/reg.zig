@@ -1,4 +1,4 @@
-const rh = @import("util");
+const rh = @import("octopus").util;
 
 /// Common ADC registers
 pub const C_ADC = struct {

@@ -9,9 +9,9 @@ pub fn subuild(b: *std.Build, t: *std.Build.Step.Compile) void {
     // rtt.setTarget(t.target);
     // rtt.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
-    rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
-    t.addIncludePath(rpwd);
-    t.addIncludePath(rpwd ++ "include");
+    rtt.addIncludePath(.{.path=rpwd ++ "components/finsh"}); // optional
+    t.addIncludePath(.{.path=rpwd});
+    t.addIncludePath(.{.path=rpwd ++ "include"});
     t.addObject(rtt);
 
     components.subuild(b, t);
@@ -26,31 +26,31 @@ fn genRttObject(b: *std.Build, t: *std.Build.Step.Compile) *std.Build.Step.Compi
     const cflags = &[_][]const u8{"-std=c11"};
 
     // include path
-    rtt.addIncludePath(rpwd ++ "components/finsh"); // optional
-    rtt.addIncludePath(rpwd);
-    rtt.addIncludePath(rpwd ++ "include");
+    rtt.addIncludePath(.{.path = rpwd ++ "components/finsh"}); // optional
+    rtt.addIncludePath(.{.path = rpwd});
+    rtt.addIncludePath(.{.path = rpwd ++ "include"});
 
     // port source files
     // rtt.addCSourceFile(rpwd ++ "start.c", cflags);
 
     // chip-specific source files
-    rtt.addAssemblyFile(rpwd ++ "cpu/arm/cortex-m4/context.s");
-    rtt.addCSourceFile(rpwd ++ "cpu/arm/cortex-m4/cpuport.c", cflags);
+    rtt.addAssemblyFile(.{.path = rpwd ++ "cpu/arm/cortex-m4/context.s"});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "cpu/arm/cortex-m4/cpuport.c"}, .flags = cflags});
 
     // core source files
-    rtt.addCSourceFile(rpwd ++ "src/clock.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/idle.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/ipc.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/irq.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/kservice.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/mem.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/memheap.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/mempool.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/object.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/scheduler_up.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/slab.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/thread.c", cflags);
-    rtt.addCSourceFile(rpwd ++ "src/timer.c", cflags);
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/clock.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/idle.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/ipc.c"},.flags =  cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/irq.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/kservice.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/mem.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/memheap.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/mempool.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/object.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/scheduler_up.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/slab.c"},.flags =  cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/thread.c"}, .flags = cflags});
+    rtt.addCSourceFile(.{.file = .{.path = rpwd ++ "src/timer.c"}, .flags = cflags});
 
     return rtt;
 }

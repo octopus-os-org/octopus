@@ -34,8 +34,8 @@ pub fn genExecutableCompile(b: *std.Build, name: []const u8) *std.Build.Step.Com
     });
 
     // startup
-    elf.addAssemblyFile(comptime rootDir() ++ "/startup.s");
-    elf.addAssemblyFile(comptime rootDir() ++ "/stm32header.s");
+    elf.addAssemblyFile(.{.path = comptime rootDir() ++ "/startup.s"});
+    elf.addAssemblyFile(.{.path = comptime rootDir() ++ "/stm32header.s"});
     elf.setLinkerScriptPath(.{ .path = comptime rootDir() ++ "/link.ld" });
 
     return elf;

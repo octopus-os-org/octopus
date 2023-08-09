@@ -17,10 +17,20 @@ pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Bui
     // todo: optimize
     // "bad smell"
     // note: because current zig's flaw and octopus is a module, must use the following way
-    const eok = octopus_module.dependencies.put("hs", hsOptions.createModule());
-    if (eok) |_| {} else |err| {
-        std.debug.print("Oops! {}", .{err});
-        // @compileError("failed to add hs options to octopus");
+    {
+        const eok = octopus_module.dependencies.put("hs", hsOptions.createModule());
+        if (eok) |_| {} else |err| {
+            std.debug.print("Oops! {}", .{err});
+            // @compileError("failed to add hs options to octopus");
+        }
+    }
+
+    {
+        const eok = octopus_module.dependencies.put("octopus", octopus_module);
+        if (eok) |_| {} else |err| {
+            std.debug.print("Oops! {}", .{err});
+            // @compileError("failed to add hs options to octopus");
+        }
     }
 
     const app_module = b.createModule(.{
@@ -87,13 +97,8 @@ fn genModule(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.M
     _ = target;
     _ = optimize;
 
-    const miutil = b.createModule(.{
-        .source_file = .{ .path = comptime rootDir() ++ "/util/util.zig" },
-    });
-
     const m = b.addModule("octopus", .{
         .source_file = .{ .path = comptime rootDir() ++ "/octopus.zig" },
-        .dependencies = &[_]std.Build.ModuleDependency{.{ .name = "util", .module = miutil }},
     });
 
     return m;
