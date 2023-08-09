@@ -9,9 +9,9 @@ pub fn subuild(b: *std.build.Builder, t: *std.Build.Step.Compile) void {
     // mobj.setTarget(t.target);
     // mobj.setBuildMode(std.builtin.Mode.ReleaseFast); // must
 
-    t.addIncludePath(rttroot);
-    t.addIncludePath(rttroot ++ "include");
-    t.addIncludePath(rpwd ++ "finsh");
+    t.addIncludePath(.{.path = rttroot});
+    t.addIncludePath(.{.path = rttroot ++ "include"});
+    t.addIncludePath(.{.path = rpwd ++ "finsh"});
     t.addObject(mobj);
 }
 
@@ -28,17 +28,17 @@ fn genFinshObject(b: *std.build.Builder, t: *std.Build.Step.Compile) *std.Build.
     // rtt.setBuildMode(std.builtin.Mode.ReleaseFast);
 
     // include path
-    mobj.addIncludePath(rttroot);
-    mobj.addIncludePath(rttroot ++ "include");
-    mobj.addIncludePath(rpwd ++ "finsh");
+    mobj.addIncludePath(.{.path = rttroot});
+    mobj.addIncludePath(.{.path = rttroot ++ "include"});
+    mobj.addIncludePath(.{.path = rpwd ++ "finsh"});
 
     // core source files
-    mobj.addCSourceFile(rpwd ++ "finsh/cmd.c", cflags);
-    mobj.addCSourceFile(rpwd ++ "finsh/msh_parse.c", cflags);
-    mobj.addCSourceFile(rpwd ++ "finsh/msh.c", cflags);
-    mobj.addCSourceFile(rpwd ++ "finsh/shell.c", cflags);
+    mobj.addCSourceFile(.{.file = .{.path = rpwd ++ "finsh/cmd.c"}, .flags = cflags});
+    mobj.addCSourceFile(.{.file = .{.path = rpwd ++ "finsh/msh_parse.c"}, .flags = cflags});
+    mobj.addCSourceFile(.{.file = .{.path = rpwd ++ "finsh/msh.c"}, .flags = cflags});
+    mobj.addCSourceFile(.{.file = .{.path = rpwd ++ "finsh/shell.c"}, .flags = cflags});
 
-    mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/enc_finsh.c", cflags);
+    mobj.addCSourceFile(.{.file = .{.path = rpwd ++ "finsh/enc_finsh/enc_finsh.c"}, .flags = cflags});
     // mobj.addCSourceFile(rpwd ++ "finsh/enc_finsh/rb.c", cflags);
 
     return mobj;

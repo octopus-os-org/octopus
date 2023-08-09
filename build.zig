@@ -14,8 +14,8 @@ pub fn build(b: *std.Build) void {
     // std.debug.print("mode:{}\n", .{mode});
 
     // add lib
-    elf.addIncludePath("src/lib/ringbuffer");
-    elf.addCSourceFile("src/lib/ringbuffer/rb.c", &[_][]const u8{"-std=c11"});
+    elf.addIncludePath(.{.path = "src/lib/ringbuffer"});
+    elf.addCSourceFile(.{.file = .{.path = "src/lib/ringbuffer/rb.c"}, .flags=&[_][]const u8{"-std=c11"}});
 
     // ----------------------------------------------------------------
     // BIN File
