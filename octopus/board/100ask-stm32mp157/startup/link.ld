@@ -9,7 +9,6 @@ MEMORY
   /* HEADER (rwx) : ORIGIN = 0x2FFC2400, LENGTH = 256 */
   /* SYSRAM (rwx) : ORIGIN = 0x2FFC2500, LENGTH = (256K - 0x2500) */
 
-
   /* The following defines ddr-ram which is start at address 0xC000_0000 and end at 0xDFFF_FFFF */
   /* the ddr-ram size is 512MB on board 100ask-stm32mp157_v11  */
   SYSRAM (rwx) : ORIGIN = 0xC0100000, LENGTH = (512M - 0x100000)
