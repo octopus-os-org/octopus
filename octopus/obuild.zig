@@ -3,7 +3,7 @@ const rt = @import("rtthread/subuild.zig");
 
 const c30d = @import("board/wheeltec-c30d/startup/obuild.zig");
 
-const octopusBuildOptions = struct {
+pub const octopusBuildOptions = struct {
     board: []const u8,
     fileSource: std.Build.FileSource,
 };
@@ -43,6 +43,7 @@ pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Bui
 
     // "app" is used for transfer control-flow to user program by octopus(startup)
     elf.addModule("app", app_module);
+    elf.addModule("octopus", octopus_module);
 
     // ----------------------------------------------------------------
     // Octopus core

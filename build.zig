@@ -3,8 +3,9 @@
 const std = @import("std");
 const octopus = @import("octopus/obuild.zig");
 
+
 pub fn build(b: *std.Build) void {
-    const elf = octopus.addOctopus(b, .{ .board = "100ask/stm32mp157", .fileSource = .{ .path = "src/main.zig" } });
+    const elf = octopus.addOctopus(b, getBoardBuildOptions("100ask/stm32mp157"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
@@ -14,8 +15,8 @@ pub fn build(b: *std.Build) void {
     // std.debug.print("mode:{}\n", .{mode});
 
     // add lib
-    elf.addIncludePath(.{.path = "src/lib/ringbuffer"});
-    elf.addCSourceFile(.{.file = .{.path = "src/lib/ringbuffer/rb.c"}, .flags=&[_][]const u8{"-std=c11"}});
+    elf.addIncludePath(.{.path = "lib/ringbuffer"});
+    elf.addCSourceFile(.{.file = .{.path = "lib/ringbuffer/rb.c"}, .flags=&[_][]const u8{"-std=c11"}});
 
     // ----------------------------------------------------------------
     // BIN File
@@ -65,4 +66,33 @@ pub fn build(b: *std.Build) void {
 
     // const test_step = b.step("test", "Run unit tests");
     // test_step.dependOn(&elf_tests.step);
+}
+
+// "not good smell" duplicated with octopus board
+fn getBoardBuildOptions(comptime board_name: []const u8) octopus.octopusBuildOptions {
+    const board_table = [_][]const u8{"100ask/stm32mp157"};
+
+    // One Item One Board
+    // The Item is a struct consisting os "board" "fileSource"
+    const board_obuild_table = [_]octopus.octopusBuildOptions{
+        .{ .board = "100ask/stm32mp157", .fileSource = .{ .path = "./app/100ask-stm32mp157/main.zig" } },
+    };
+
+    // find board info
+    const boardObuild: octopus.octopusBuildOptions = comptime blk: {
+        for (board_table, 0..) |board, idx| {
+            if (std.mem.eql(u8, board, board_name)) {
+                break :blk board_obuild_table[idx];
+            }
+        } else {
+            @compileLog("Your input board is '" ++ board_name ++ "'");
+            @compileLog("You may mispell the board name or it is not supported yet");
+            @compileLog("Here is the board list: ");
+            @compileLog(board_table);
+
+            @compileError("unknown board: " ++ board_name);
+        }
+    };
+
+    return boardObuild;
 }
