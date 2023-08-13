@@ -3,7 +3,7 @@ const rt = @import("rtthread/subuild.zig");
 
 const c30d = @import("board/wheeltec-c30d/startup/obuild.zig");
 
-const octopusBuildOptions = struct {
+pub const octopusBuildOptions = struct {
     board: []const u8,
     fileSource: std.Build.FileSource,
 };
