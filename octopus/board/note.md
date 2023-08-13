@@ -13,3 +13,5 @@ The job of "board" is something like a bootloader
 
 - the systick interrupt handler is "extern SysTickIrqHandler"
 - the pendsv interrupt handler is "extern PendSV_Handler"
+
+- responsible for the basic I/O device(e.g. uart) intialization to interact with users

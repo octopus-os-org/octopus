@@ -43,6 +43,7 @@ pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Bui
 
     // "app" is used for transfer control-flow to user program by octopus(startup)
     elf.addModule("app", app_module);
+    elf.addModule("octopus", octopus_module);
 
     // ----------------------------------------------------------------
     // Octopus core

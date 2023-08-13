@@ -1,12 +1,14 @@
+const std = @import("std");
+
 pub const thread = @import("core/thread.zig");
 pub const ipc = @import("core/ipc.zig");
 pub const chip = @import("chip/chip.zig");
-
 pub const driver = @import("drivers/drivers.zig");
-
 pub const util = @import("util/util.zig");
 pub const idm = @import("managers/idm/idm.zig");
 pub const initm = @import("managers/init/initm.zig");
+pub const types = @import("def/types.zig");
+pub const dev = @import("managers/dev/dev.zig");
 
 const rt = @cImport({
     @cInclude("rtapi.h");
@@ -78,4 +80,22 @@ export fn SysTickIrqHandler() callconv(.C) void {
         //* leave interrupt */
         rt.rt_interrupt_leave();
     }
+}
+
+// The entry of octopus
+pub fn init() anyerror!void {
+    // heap
+    const heap_begin: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_begin");
+    const heap_end: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_end");
+    const heap_len: u32 =  @intFromPtr(heap_end) - @intFromPtr(heap_begin);
+    var buffer:*[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
+
+    var _allocator = std.heap.FixedBufferAllocator.init(buffer);
+    const allocator = _allocator.allocator();
+
+    // idm
+    idm.init(allocator);
+
+    // init-section
+    try initm.do_init_default();
 }
