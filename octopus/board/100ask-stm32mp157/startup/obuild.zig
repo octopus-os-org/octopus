@@ -53,8 +53,9 @@ pub fn genHardwareOptions(
     hsOption.addOption([]const u8, "chip.id", "stm32l475vet6");
     hsOption.addOption([]const u8, "chip.family", "stm32l4xx");
 
-    hsOption.addOption(u32, "os.heap_addr_begin", (0x2FFFFFFF - 0x8000));
-    hsOption.addOption(u32, "os.heap_addr_end", (0x2FFFFFFF)); // 32KB
+    // TODO consider moving heap-specific information to linker script
+    hsOption.addOption(u32, "os.heap_addr_begin", (0xC0100000 + 0x1F400000 - 0x8000000));
+    hsOption.addOption(u32, "os.heap_addr_end", (0xC0100000 + 0x1F400000)); // 128MB
 
     // hsOption.addOption([]const u8, "chip.vendor", "st");
 
