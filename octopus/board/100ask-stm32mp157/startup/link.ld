@@ -35,6 +35,14 @@ SECTIONS
     *(.text*)  /* Program code */
     *(.rodata*)  /* Read-only data */
     . = ALIGN(4);
+
+    /** support for octopus initialization-mechanism */
+    . = ALIGN(4);
+    _octopus_init_begin = .;
+    KEEP(*(.octopus.init));
+    _octopus_init_end = .;
+    . = ALIGN(4);
+
   } >SYSRAM
 
   .data : {
@@ -75,7 +83,7 @@ SECTIONS
 
     /* main stack */
     PROVIDE ( _stack_start = . );
-    . = . + 0x10000; /* 8KB */
+    . = . + 0x8000; /* 32KB */
     PROVIDE ( _stack_end = . );
 
     . = ALIGN(8);
