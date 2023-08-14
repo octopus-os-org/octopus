@@ -82,9 +82,6 @@ var console_dev = _console_dev.Dev();
 fn _init() void {
     const say = "Board Initialization...\r\n";
     _ = console_dev.write(say, say.len);
-    var t:u32 = 3;
-    var i:u32 = 0;
-    t = t / i;
     _ = octopus.idm.gidm.register("tty", &console_dev) catch {};
 }
 export var board_init: octopus.initm.OctopusInitElem linksection(octopus.initm.OISN) = .{ .name = "board_init", .init = _init };
