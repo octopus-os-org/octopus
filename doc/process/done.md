@@ -1,7 +1,0 @@
-- add irq abstraction (cpu level)
-- add pin abstraction (cpu level)
-- add gpio abstraction (cpu level)
-- using heap on rtthread
-- add adc abstraction (cpu level) (weak)
-- (partially) make octopus to be a separate module
-- update to zig 0.11.0
