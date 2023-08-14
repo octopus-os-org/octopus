@@ -5,7 +5,6 @@ const ts = @import("octopus").types;
 const chip = @import("octopus").chip.st.stm32mp157x;
 const chipreg = chip.reg.devices.STM32MP157x.peripherals;
 
-
 // These symbols come from the linker script
 extern const _data_loadaddr: u32;
 extern var _data_start: u32;
@@ -32,6 +31,21 @@ export fn resetHandler() callconv(.C) void {
     unreachable;
 }
 
+inline fn console_write(buf: [*]const u8, size: ts.size_t) ts.size_t {
+    var idx: ts.size_t = 0;
+    while(idx < size) {
+        // wait last transition complete
+        while(chipreg.USART4.ISR.read().TXE == 0) {}
+
+        chipreg.USART4.TDR.write_raw(buf[idx]);
+        idx += 1;
+    }
+    return idx;
+}
+
+fn console_puts(text: []const u8) void {
+    _ = console_write(@ptrCast(&text[0]), text.len);
+}
 
 // uart definitions
 const uartT = struct {
@@ -50,16 +64,7 @@ const uartT = struct {
     fn write(ctx: *anyopaque, buf: [*]const u8, size: ts.size_t) ts.size_t {
         _ = ctx;
 
-        var idx: ts.size_t = 0;
-        while(idx < size) {
-            // wait last transition complete
-            while(chipreg.USART4.ISR.read().TXE == 0) {}
-
-            chipreg.USART4.TDR.write_raw(buf[idx]);
-            idx += 1;
-        }
-
-        return 0;
+        return console_write(buf, size);
     }
 
     fn Dev(self: *Self) octopus.dev.Dev {
@@ -77,19 +82,20 @@ var console_dev = _console_dev.Dev();
 fn _init() void {
     const say = "Board Initialization...\r\n";
     _ = console_dev.write(say, say.len);
-    
+    var t:u32 = 3;
+    var i:u32 = 0;
+    t = t / i;
     _ = octopus.idm.gidm.register("tty", &console_dev) catch {};
 }
 export var board_init: octopus.initm.OctopusInitElem linksection(octopus.initm.OISN) = .{ .name = "board_init", .init = _init };
 
-// const board = @import("board/board.zig");
-
-// pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
-//     @setCold(true);
-//     _ = error_return_trace;
-//     _ = ret_addr;
-//     board.uart.puts("\n!KERNEL PANIC!\n");
-//     board.uart.puts(msg);
-//     board.uart.puts("\n");
-//     while (true) {}
-// }
+// panic handler
+pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
+    @setCold(true);
+    _ = error_return_trace;
+    _ = ret_addr;
+    console_puts("\r\n!KERNEL PANIC!\r\n");
+    console_puts(msg);
+    console_puts("\r\n");
+    while (true) {}
+}
