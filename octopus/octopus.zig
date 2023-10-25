@@ -1,14 +1,7 @@
 const std = @import("std");
-
-pub const thread = @import("core/thread.zig");
-pub const ipc = @import("core/ipc.zig");
-pub const chip = @import("chip/chip.zig");
-pub const driver = @import("drivers/drivers.zig");
-pub const util = @import("util/util.zig");
-pub const idm = @import("managers/idm/idm.zig");
-pub const initm = @import("managers/init/initm.zig");
-pub const types = @import("def/types.zig");
-pub const dev = @import("managers/dev/dev.zig");
+const thread = @import("core/thread.zig");
+const idm = @import("managers/idm/expose.zig");
+const initm = @import("managers/init/initm.zig");
 
 const rt = @cImport({
     @cInclude("rtapi.h");

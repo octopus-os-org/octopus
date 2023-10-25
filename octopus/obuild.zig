@@ -99,7 +99,7 @@ fn genModule(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.M
     _ = optimize;
 
     const m = b.addModule("octopus", .{
-        .source_file = .{ .path = comptime rootDir() ++ "/octopus.zig" },
+        .source_file = .{ .path = comptime rootDir() ++ "/expose.zig" },
     });
 
     return m;
