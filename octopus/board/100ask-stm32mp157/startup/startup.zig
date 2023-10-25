@@ -55,10 +55,16 @@ const uartT = struct {
         // TODO
         // const self = @as(*Self, @ptrCast(ctx));
         _ = ctx;
-        _ = buf;
-        _ = size;
 
-        return 0;
+        var cnt: ts.size_t = 0;
+
+        // has data
+        while ((cnt < size) and (chipreg.USART4.ISR.read().RXNE == 1))  {
+            buf[cnt] = @truncate(chipreg.USART4.RDR.read().RDR & 0xFF);
+            cnt += 1;
+        }
+
+        return cnt;
     }
 
     fn write(ctx: *anyopaque, buf: [*]const u8, size: ts.size_t) ts.size_t {
@@ -80,9 +86,12 @@ var console_dev = _console_dev.Dev();
 
 // Do uart device initialization and register to octopus
 fn _init() void {
+    // init uart
+    chipreg.USART4.CR1.modify(.{.TE=1,.RE=1});
+
     const say = "Board Initialization...\r\n";
     _ = console_dev.write(say, say.len);
-    _ = octopus.idm.gidm.register("tty", &console_dev) catch {};
+    _ = octopus.idm.dev.register(octopus.default.TTY, &console_dev) catch {};
 }
 export var board_init: octopus.initm.OctopusInitElem linksection(octopus.initm.OISN) = .{ .name = "board_init", .init = _init };
 

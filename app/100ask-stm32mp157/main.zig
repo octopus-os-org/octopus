@@ -15,19 +15,37 @@ const librb = @cImport({
 pub fn main() void {
     _ = octopus.init() catch {};
 
-    if (octopus.idm.gidm.find("tty")) |tty| {
-        var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
+    var tty = octopus.idm.dev.find(octopus.default.TTY);
+    if (tty) |devtty| {
+        // var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
         const say = "Welcome To App World!\r\n";
-        _ = dev.*.write(say, say.len);
+        _ = devtty.*.write(say, say.len);
     }
 
     led_init();
 
     init_emmc();
 
+    if (tty) |devtty| {
+        // var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
+        const say = "[info] Echo mode\r\n";
+        _ = devtty.*.write(say, say.len);
+    }
+
     var i: u32 = 0;
     while (true) {
         i += 1;
+        if (tty) |devtty| {
+            // const say = "[info] Check\r\n";
+            // _ = devtty.*.write(say, say.len);
+        
+            var c:[1]u8 = undefined;
+            if (devtty.*.read(&c, 1) == 1) {
+                // const say2 = "[info] checked\r\n";
+                // _ = devtty.*.write(say2, say2.len);
+                _ = devtty.*.write(&c, 1);
+            }
+        }
 
         if (i > 500000) {
             i = 0;
