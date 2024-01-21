@@ -130,14 +130,17 @@ fn init_systick() void {
 const uartT = struct {
     const Self = @This();
 
-    fn read(ctx: *anyopaque, buf: [*]u8, size: ts.size_t) ts.size_t {
+    fn read(
+        ctx: *anyopaque,
+        buf: []u8,
+    ) usize {
         // TODO
         // const self = @as(*Self, @ptrCast(ctx));
         _ = ctx;
 
-        var cnt: ts.size_t = 0;
+        var cnt: usize = 0;
 
-        while (cnt < size) {
+        while (cnt < buf.len) {
             // has data
             if (uart.getc_noblock()) |c| {
                 buf[cnt] = c;
@@ -150,10 +153,10 @@ const uartT = struct {
         return cnt;
     }
 
-    fn write(ctx: *anyopaque, buf: [*]const u8, size: ts.size_t) ts.size_t {
+    fn write(ctx: *anyopaque, buf: []const u8) usize {
         _ = ctx;
-        var cnt: ts.size_t = 0;
-        while (cnt < size) {
+        var cnt: usize = 0;
+        while (cnt < buf.len) {
             uart.putc(buf[cnt]);
             cnt += 1;
         }
@@ -174,7 +177,7 @@ var console_dev = _console_dev.Dev();
 fn _init() void {
     // init uart
     const say = "Board Initialization...\r\n";
-    _ = console_dev.write(say, say.len);
+    _ = console_dev.write(say);
     _ = octopus.idm.dev.register(octopus.default.TTY, &console_dev) catch {};
 }
 export var board_init: octopus.initm.OctopusInitElem linksection(octopus.initm.OISN) = .{ .name = "board_init", .init = _init };

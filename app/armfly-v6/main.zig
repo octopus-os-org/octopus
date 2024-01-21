@@ -9,7 +9,7 @@ pub fn main() void {
     if (tty) |devtty| {
         // var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
         const say = "Welcome To App World!\r\n";
-        _ = devtty.*.write(say, say.len);
+        _ = devtty.*.write(say);
     }
     while (true) {}
 }
