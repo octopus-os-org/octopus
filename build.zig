@@ -3,9 +3,8 @@
 const std = @import("std");
 const octopus = @import("octopus/obuild.zig");
 
-
 pub fn build(b: *std.Build) void {
-    const elf = octopus.addOctopus(b, getBoardBuildOptions("100ask/stm32mp157"));
+    const elf = octopus.addOctopus(b, getBoardBuildOptions("armfly/v6"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
@@ -15,8 +14,8 @@ pub fn build(b: *std.Build) void {
     // std.debug.print("mode:{}\n", .{mode});
 
     // add lib
-    elf.addIncludePath(.{.path = "lib/ringbuffer"});
-    elf.addCSourceFile(.{.file = .{.path = "lib/ringbuffer/rb.c"}, .flags=&[_][]const u8{"-std=c11"}});
+    elf.addIncludePath(.{ .path = "lib/ringbuffer" });
+    elf.addCSourceFile(.{ .file = .{ .path = "lib/ringbuffer/rb.c" }, .flags = &[_][]const u8{"-std=c11"} });
 
     // ----------------------------------------------------------------
     // BIN File
@@ -39,13 +38,13 @@ pub fn build(b: *std.Build) void {
     // ----------------------------------------------------------------
 
     // FLASH STEP
-    const flash_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/flash.sh" });
+    const flash_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/class/boards/armfly-v6/flash.sh" });
     flash_cmd.step.dependOn(&bin.step);
     const flash_step = b.step("flash", "flash program into target");
     flash_step.dependOn(&flash_cmd.step);
 
     // FLASH ELF STEP
-    const flashelf_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/flashelf.sh" });
+    const flashelf_cmd = b.addSystemCommand(&[_][]const u8{ "bash", "tools/class/boards/armfly-v6/flashelf.sh" });
     flashelf_cmd.step.dependOn(b.default_step);
     const flashelf_step = b.step("flashelf", "flash program(elf) into target");
     flashelf_step.dependOn(&flashelf_cmd.step);
@@ -70,12 +69,16 @@ pub fn build(b: *std.Build) void {
 
 // "not good smell" duplicated with octopus board
 fn getBoardBuildOptions(comptime board_name: []const u8) octopus.octopusBuildOptions {
-    const board_table = [_][]const u8{"100ask/stm32mp157"};
+    const board_table = [_][]const u8{
+        "100ask/stm32mp157",
+        "armfly/v6",
+    };
 
     // One Item One Board
     // The Item is a struct consisting os "board" "fileSource"
     const board_obuild_table = [_]octopus.octopusBuildOptions{
         .{ .board = "100ask/stm32mp157", .fileSource = .{ .path = "./app/100ask-stm32mp157/main.zig" } },
+        .{ .board = "armfly/v6", .fileSource = .{ .path = "./app/armfly-v6/main.zig" } },
     };
 
     // find board info

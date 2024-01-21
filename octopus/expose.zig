@@ -10,6 +10,7 @@ pub const driver = @import("drivers/drivers.zig");
 pub const idm = @import("managers/idm/expose.zig");
 pub const dev = @import("managers/dev/expose.zig");
 pub const initm = @import("managers/init/expose.zig");
+// pub const cli = @import("managers/cli/mcli.zig");
 
 pub const thread = @import("core/thread.zig");
 pub const ipc = @import("core/ipc.zig");

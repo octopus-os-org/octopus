@@ -38,7 +38,7 @@ pub fn pinmgr_set_pin_mux(pin_id: u16, pin_mux: u8) !void {
     mode_reg.* = base.modify_bits_of(u32, oldVal, 0x3, @as(u5, @truncate(2 * port)), modeVal);
 
     // set alternate
-    var af_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_AFRL_REG_AO + port / 8));
+    var af_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_AFRL_REG_AO + ((port / 8) * 4)));
     oldVal = af_reg.*;
     af_reg.* = base.modify_bits_of(u32, oldVal, 0xF, @as(u5, @truncate(4 * (port % 8))), afVal);
 }

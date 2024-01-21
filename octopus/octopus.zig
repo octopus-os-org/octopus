@@ -1,3 +1,5 @@
+pub usingnamespace @import("./expose.zig");
+
 const std = @import("std");
 const thread = @import("core/thread.zig");
 const idm = @import("managers/idm/expose.zig");
@@ -80,8 +82,8 @@ pub fn init() anyerror!void {
     // heap
     const heap_begin: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_begin");
     const heap_end: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_end");
-    const heap_len: u32 =  @intFromPtr(heap_end) - @intFromPtr(heap_begin);
-    var buffer:*[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
+    const heap_len: u32 = @intFromPtr(heap_end) - @intFromPtr(heap_begin);
+    var buffer: *[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
 
     var _allocator = std.heap.FixedBufferAllocator.init(buffer);
     const allocator = _allocator.allocator();

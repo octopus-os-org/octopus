@@ -1,0 +1,1 @@
+此 svd parser 有点问题，解析出来的 RCC reg-field-bits 变散了，e.g. 原本的 SW:u2 成了 SW0:u1,SW1:u1 
