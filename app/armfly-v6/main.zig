@@ -1,11 +1,16 @@
+const octopus = @import("octopus");
 const chip = @import("octopus").chip.st.stm32f429bit6;
-const uart = @import("uart.zig");
 
 var irq_handler_table: [256]?*const fn (irq_id: u8, p: ?*anyopaque) void = undefined;
 
 pub fn main() void {
-    _ = uart.init() catch {};
-    uart.puts("hello\r\n");
+    _ = octopus.init() catch {};
+    var tty = octopus.idm.dev.find(octopus.default.TTY);
+    if (tty) |devtty| {
+        // var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
+        const say = "Welcome To App World!\r\n";
+        _ = devtty.*.write(say, say.len);
+    }
     while (true) {}
 }
 

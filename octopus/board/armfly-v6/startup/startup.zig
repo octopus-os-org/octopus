@@ -1,9 +1,12 @@
 const app = @import("app");
 const builtin = @import("std").builtin;
 
-const regs = @import("../../../chip/st/reg/stm32f429.zig").devices.STM32F429.peripherals;
-const chipcore = @import("../../../chip/arch/arm/cortex_m4.zig");
+const octopus = @import("octopus");
+const ts = @import("octopus").types;
+const chip = octopus.chip.st.stm32f429bit6;
+const regs = chip.reg.devices.STM32F429.peripherals;
 
+const uart = @import("uart.zig");
 // These symbols come from the linker script
 extern const _data_loadaddr: u32;
 extern var _data_start: u32;
@@ -28,8 +31,13 @@ export fn resetHandler() callconv(.C) void {
     // Init clock
     init_clock();
 
+    // Init comm interface
+    _ = uart.init() catch {};
+
     // Init systick (os clock)
-    init_systick();
+    // init_systick();
+
+    uart.puts("Going to main\r\n");
 
     // Call user application (entry)
     app.main();
@@ -109,21 +117,71 @@ fn init_clock() void {
 fn init_systick() void {
     // . configure system tick
     // ticks = clockHZ / neededHZ
-    // x = 168000000 / 1000  = 168000  (168MHz, 1ms / per irq)
-    // clock = 168 / 8 = 21MHz
-    chipcore.systick.config(210000, chipcore.systick.ClockSourceEnum.ExternalReferenceClock);
-    chipcore.systick.enable();
+    // x = 180000000 / 1000  = 180000  (180MHz, 1ms / per irq)
+    // clock = 180 / 8 = 22.5MHz
+    chip.systick.config(225000, chip.systick.ClockSourceEnum.ExternalReferenceClock);
+    chip.systick.enable();
 }
 
-// const board = @import("board/board.zig");
+// uart definitions
+const uartT = struct {
+    const Self = @This();
+
+    fn read(ctx: *anyopaque, buf: [*]u8, size: ts.size_t) ts.size_t {
+        // TODO
+        // const self = @as(*Self, @ptrCast(ctx));
+        _ = ctx;
+
+        var cnt: ts.size_t = 0;
+
+        while (cnt < size) {
+            // has data
+            if (uart.getc_noblock()) |c| {
+                buf[cnt] = c;
+                cnt += 1;
+            } else {
+                break;
+            }
+        }
+
+        return cnt;
+    }
+
+    fn write(ctx: *anyopaque, buf: [*]const u8, size: ts.size_t) ts.size_t {
+        _ = ctx;
+        var cnt: ts.size_t = 0;
+        while (cnt < size) {
+            uart.putc(buf[cnt]);
+            cnt += 1;
+        }
+        return cnt;
+    }
+
+    fn Dev(self: *Self) octopus.dev.Dev {
+        return .{
+            .ptr = self,
+            .vtable = &.{ .read = read, .write = write },
+        };
+    }
+};
+
+var _console_dev = uartT{};
+var console_dev = _console_dev.Dev();
+
+fn _init() void {
+    // init uart
+    const say = "Board Initialization...\r\n";
+    _ = console_dev.write(say, say.len);
+    _ = octopus.idm.dev.register(octopus.default.TTY, &console_dev) catch {};
+}
+export var board_init: octopus.initm.OctopusInitElem linksection(octopus.initm.OISN) = .{ .name = "board_init", .init = _init };
 
 pub fn panic(msg: []const u8, error_return_trace: ?*builtin.StackTrace, ret_addr: ?usize) noreturn {
-    _ = msg;
     @setCold(true);
     _ = error_return_trace;
     _ = ret_addr;
-    // board.uart.puts("\n!KERNEL PANIC!\n");
-    // board.uart.puts(msg);
-    // board.uart.puts("\n");
+    uart.puts("\n!KERNEL PANIC!\n");
+    uart.puts(msg);
+    uart.puts("\n");
     while (true) {}
 }

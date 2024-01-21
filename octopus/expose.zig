@@ -1,6 +1,6 @@
 const _octopus = @import("octopus.zig");
 
-pub const init = _octopus.init;
+// pub const init = _octopus.init;
 pub const startup = _octopus.startup;
 pub const default = @import("default.zig");
 
