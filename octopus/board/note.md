@@ -15,3 +15,5 @@ The job of "board" is something like a bootloader
 - the pendsv interrupt handler is "extern PendSV_Handler"
 
 - responsible for the basic I/O device(e.g. uart) intialization to interact with users
+
+- (optional,recommend) enable octopus-debug by calling "octopus.debug.set_lower_puts(xxx)"

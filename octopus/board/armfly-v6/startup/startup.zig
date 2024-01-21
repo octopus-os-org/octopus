@@ -37,6 +37,9 @@ export fn resetHandler() callconv(.C) void {
     // Init systick (os clock)
     // init_systick();
 
+    // inject debug-output to octopus debug
+    octopus.debug.set_lower_puts(uart.puts);
+
     uart.puts("Going to main\r\n");
 
     // Call user application (entry)

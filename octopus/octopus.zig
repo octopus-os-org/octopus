@@ -15,6 +15,8 @@ const finsh = @cImport({
 
 const hs = @import("hs");
 
+const debug = @import("debug.zig");
+
 var main_thread = thread.Thread{};
 var main_thread_stack: [2048]u8 align(8) = undefined;
 
@@ -79,6 +81,7 @@ export fn SysTickIrqHandler() callconv(.C) void {
 
 // The entry of octopus
 pub fn init() anyerror!void {
+    debug.log("[octopus]: init...", .{});
     // heap
     const heap_begin: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_begin");
     const heap_end: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_end");
@@ -87,10 +90,11 @@ pub fn init() anyerror!void {
 
     var _allocator = std.heap.FixedBufferAllocator.init(buffer);
     const allocator = _allocator.allocator();
-
     // idm
     idm.init(allocator);
 
     // init-section
     try initm.do_init_default();
+
+    debug.log("[octopus]: init done", .{});
 }

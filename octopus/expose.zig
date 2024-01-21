@@ -17,3 +17,5 @@ pub const ipc = @import("core/ipc.zig");
 
 pub const types = @import("def/types.zig");
 pub const util = @import("util/util.zig");
+
+pub const debug = @import("debug.zig");
