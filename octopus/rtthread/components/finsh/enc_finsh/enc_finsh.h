@@ -1,1 +1,0 @@
-void finsh_console_input_char(char c);

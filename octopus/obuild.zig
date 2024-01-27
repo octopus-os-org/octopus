@@ -1,5 +1,4 @@
 const std = @import("std");
-const rt = @import("rtthread/subuild.zig");
 
 const c30d = @import("board/wheeltec-c30d/startup/obuild.zig");
 
@@ -48,7 +47,6 @@ pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Bui
     // ----------------------------------------------------------------
     // Octopus core
     // ----------------------------------------------------------------
-    rt.subuild(b, elf);
     // elf.addModule("octopus", octopus_module);
 
     return elf;
