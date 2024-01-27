@@ -1,4 +1,5 @@
 // Following pact_auto_init
+const debug = @import("octopus").debug;
 
 /// octopus-init-section element type
 pub const OctopusInitElem = extern struct {
@@ -46,8 +47,8 @@ pub const OISN = ".octopus.init";
 pub fn do_init_default() anyerror!void {
     const _begin: [*]u8 = @ptrCast(&sections._octopus_init_begin);
     const _end: [*]u8 = @ptrCast(&sections._octopus_init_end);
-    const _len:u32 = @intFromPtr(_end) - @intFromPtr(_begin);
-
+    const _len: u32 = @intFromPtr(_end) - @intFromPtr(_begin);
+    debug.log("[octopus][initm][dbg]: init-section-info(begin,end,len): 0x{x} 0x{x} 0x{x}", .{ @intFromPtr(_begin), @intFromPtr(_end), _len });
     return do_init_list(_begin, _len);
 }
 

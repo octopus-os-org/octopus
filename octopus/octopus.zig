@@ -88,6 +88,7 @@ pub fn init() anyerror!void {
     const heap_len: u32 = @intFromPtr(heap_end) - @intFromPtr(heap_begin);
     var buffer: *[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
 
+    debug.log("[octopus][dbg]: heap-info(begin,end,len): 0x{x} 0x{x} 0x{x}", .{ @intFromPtr(heap_begin), @intFromPtr(heap_end), heap_len });
     var _allocator = std.heap.FixedBufferAllocator.init(buffer);
     const allocator = _allocator.allocator();
     // idm
