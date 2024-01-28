@@ -1,17 +1,15 @@
 const std = @import("std");
 
-const c30d = @import("board/wheeltec-c30d/startup/obuild.zig");
-
 pub const octopusBuildOptions = struct {
     board: []const u8,
     fileSource: std.Build.FileSource,
 };
 
 pub fn genExecutable(b: *std.Build, comptime options: octopusBuildOptions) *std.Build.Step.Compile {
-    const elf = genExecutableCompileByBoard(b, options.board);
+    const exe = genExecutableCompileByBoard(b, options.board);
     const hsOptions = genHardwareOptionsByBoard(b, options.board);
 
-    const octopus_module = genModule(b, elf.target, elf.optimize);
+    const octopus_module = addOctopusModule(b);
     // put hardware-specific options into octopus
     // todo: optimize
     // "bad smell"
@@ -41,15 +39,10 @@ pub fn genExecutable(b: *std.Build, comptime options: octopusBuildOptions) *std.
     });
 
     // "app" is used for transfer control-flow to user program by octopus(startup)
-    elf.addModule("app", app_module);
-    elf.addModule("octopus", octopus_module);
+    exe.addModule("app", app_module);
+    exe.addModule("octopus", octopus_module);
 
-    // ----------------------------------------------------------------
-    // Octopus core
-    // ----------------------------------------------------------------
-    // elf.addModule("octopus", octopus_module);
-
-    return elf;
+    return exe;
 }
 
 fn getBoardObuild(comptime board_name: []const u8) type {
@@ -98,10 +91,7 @@ fn genHardwareOptionsByBoard(b: *std.Build, comptime board_name: []const u8) *st
     return getBoardObuild(board_name).genHardwareOptions(b);
 }
 
-fn genModule(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Module {
-    _ = target;
-    _ = optimize;
-
+fn addOctopusModule(b: *std.Build) *std.Build.Module {
     const m = b.addModule("octopus", .{
         .source_file = .{ .path = comptime rootDir() ++ "/octopus.zig" },
     });

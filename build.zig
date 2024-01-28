@@ -14,25 +14,15 @@ pub fn build(b: *std.Build) void {
     // std.debug.print("mode:{}\n", .{mode});
 
     // add lib
-    elf.addIncludePath(.{ .path = "lib/ringbuffer" });
-    elf.addCSourceFile(.{ .file = .{ .path = "lib/ringbuffer/rb.c" }, .flags = &[_][]const u8{"-std=c11"} });
+    // elf.addIncludePath(.{ .path = "lib/ringbuffer" });
+    // elf.addCSourceFile(.{ .file = .{ .path = "lib/ringbuffer/rb.c" }, .flags = &[_][]const u8{"-std=c11"} });
 
     // ----------------------------------------------------------------
     // BIN File
     // ----------------------------------------------------------------
-
-    // With `addInstallRaw()` I tell the build system that I want to generate a
-    // raw binary image from the ELF executable we generated above. This is the
-    // binary the Pi 3 can run. I make this "bin generation step" a dependency
-    // of the default "install step" so that it gets executed on a regular
-    // `zig build`.
-
     const _bin = elf.addObjCopy(.{ .format = .bin });
     const bin = b.addInstallBinFile(_bin.getOutputSource(), "zig-program.bin");
     b.getInstallStep().dependOn(&bin.step);
-
-    // const step_bin = b.step("bin", "Generate binary file to be flashed");
-    // step_bin.dependOn(&bin.step);
 
     // ----------------------------------------------------------------
     // ----------------------------------------------------------------
@@ -48,23 +38,6 @@ pub fn build(b: *std.Build) void {
     flashelf_cmd.step.dependOn(b.default_step);
     const flashelf_step = b.step("flashelf", "flash program(elf) into target");
     flashelf_step.dependOn(&flashelf_cmd.step);
-
-    // TEST STEP
-    // const elf_tests = b.addTest("src/startup.zig");
-
-    // rt.test_subuild(b, elf_tests);
-
-    // elf_tests.addIncludePath("src/lib/ringbuffer");
-    // elf_tests.addCSourceFile("src/lib/ringbuffer/rb.c", &[_][]const u8{"-std=c11"});
-
-    // elf_tests.addAssemblyFile("src/startup/startup.s");
-    // elf_tests.setLinkerScriptPath(.{ .path = "src/startup/link.ld" });
-
-    // elf_tests.setTarget(target);
-    // elf_tests.setBuildMode(optimize);
-
-    // const test_step = b.step("test", "Run unit tests");
-    // test_step.dependOn(&elf_tests.step);
 }
 
 // "not good smell" duplicated with octopus board

@@ -24,7 +24,7 @@ pub fn genExecutableCompile(b: *std.Build, name: []const u8) *std.Build.Step.Com
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
-    const elf = b.addExecutable(.{
+    const exe = b.addExecutable(.{
         .name = name,
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
@@ -34,10 +34,10 @@ pub fn genExecutableCompile(b: *std.Build, name: []const u8) *std.Build.Step.Com
     });
 
     // startup
-    elf.addAssemblyFile(comptime rootDir() ++ "/startup.s");
-    elf.setLinkerScriptPath(.{ .path = comptime rootDir() ++ "/link.ld" });
+    exe.addAssemblyFile(comptime rootDir() ++ "/startup.s");
+    exe.setLinkerScriptPath(.{ .path = comptime rootDir() ++ "/link.ld" });
 
-    return elf;
+    return exe;
 }
 
 pub fn genHardwareOptions(
