@@ -4,7 +4,7 @@ const std = @import("std");
 const octopus = @import("octopus/obuild.zig");
 
 pub fn build(b: *std.Build) void {
-    const elf = octopus.addOctopus(b, getBoardBuildOptions("armfly/v6"));
+    const elf = octopus.genExecutable(b, getBoardBuildOptions("armfly/v6"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

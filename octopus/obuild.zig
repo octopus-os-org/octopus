@@ -7,7 +7,7 @@ pub const octopusBuildOptions = struct {
     fileSource: std.Build.FileSource,
 };
 
-pub fn addOctopus(b: *std.Build, comptime options: octopusBuildOptions) *std.Build.Step.Compile {
+pub fn genExecutable(b: *std.Build, comptime options: octopusBuildOptions) *std.Build.Step.Compile {
     const elf = genExecutableCompileByBoard(b, options.board);
     const hsOptions = genHardwareOptionsByBoard(b, options.board);
 
