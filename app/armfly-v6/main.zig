@@ -5,7 +5,7 @@ var irq_handler_table: [256]?*const fn (irq_id: u8, p: ?*anyopaque) void = undef
 
 pub fn main() void {
     _ = octopus.init() catch {};
-    var tty = octopus.idm.dev.find(octopus.default.TTY);
+    const tty = octopus.idm.dev.find(octopus.default.TTY);
     if (tty) |devtty| {
         // var dev: *octopus.dev.Dev = @alignCast(@ptrCast(tty));
         const say = "Welcome To App World!\r\n";
@@ -15,7 +15,7 @@ pub fn main() void {
 }
 
 export fn InterruptHandler() callconv(.C) void {
-    var irqid = chip.irq.get_current_executing_irqid();
+    const irqid = chip.irq.get_current_executing_irqid();
 
     if (irq_handler_table[irqid]) |handler| {
         handler(irqid, null);

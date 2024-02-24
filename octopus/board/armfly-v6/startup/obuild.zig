@@ -35,7 +35,7 @@ pub fn genExecutableCompile(b: *std.Build, name: []const u8) *std.Build.Step.Com
 
     // startup
     exe.addAssemblyFile(.{ .path = comptime rootDir() ++ "/startup.s" });
-    exe.setLinkerScriptPath(.{ .path = comptime rootDir() ++ "/link.ld" });
+    exe.setLinkerScript(.{ .path = comptime rootDir() ++ "/link.ld" });
 
     return exe;
 }

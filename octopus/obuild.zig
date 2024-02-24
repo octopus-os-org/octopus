@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub const octopusBuildOptions = struct {
     board: []const u8,
-    fileSource: std.Build.FileSource,
+    fileSource: std.Build.LazyPath,
 };
 
 pub fn genExecutable(b: *std.Build, comptime options: octopusBuildOptions) *std.Build.Step.Compile {
@@ -15,32 +15,24 @@ pub fn genExecutable(b: *std.Build, comptime options: octopusBuildOptions) *std.
     // "bad smell"
     // note: because current zig's flaw and octopus is a module, must use the following way
     {
-        const eok = octopus_module.dependencies.put("hs", hsOptions.createModule());
-        if (eok) |_| {} else |err| {
-            std.debug.print("Oops! {}", .{err});
-            // @compileError("failed to add hs options to octopus");
-        }
+        octopus_module.addOptions("hs", hsOptions);
     }
 
     {
-        const eok = octopus_module.dependencies.put("octopus", octopus_module);
-        if (eok) |_| {} else |err| {
-            std.debug.print("Oops! {}", .{err});
-            // @compileError("failed to add hs options to octopus");
-        }
+        octopus_module.addImport("octopus", octopus_module);
     }
 
     const app_module = b.createModule(.{
-        .source_file = options.fileSource,
-        .dependencies = &.{
+        .root_source_file = options.fileSource,
+        .imports = &.{
             // make 'octopus' top-namespace available for app
             .{ .name = "octopus", .module = octopus_module },
         },
     });
 
     // "app" is used for transfer control-flow to user program by octopus(startup)
-    exe.addModule("app", app_module);
-    exe.addModule("octopus", octopus_module);
+    exe.root_module.addImport("app", app_module);
+    exe.root_module.addImport("octopus", octopus_module);
 
     return exe;
 }
@@ -93,7 +85,7 @@ fn genHardwareOptionsByBoard(b: *std.Build, comptime board_name: []const u8) *st
 
 fn addOctopusModule(b: *std.Build) *std.Build.Module {
     const m = b.addModule("octopus", .{
-        .source_file = .{ .path = comptime rootDir() ++ "/octopus.zig" },
+        .root_source_file = .{ .path = comptime rootDir() ++ "/octopus.zig" },
     });
 
     return m;

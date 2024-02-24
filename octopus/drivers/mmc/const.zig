@@ -116,7 +116,7 @@ pub const CmdResp = struct {
     }
 
     fn _u32_to_array_u8(src: u32) [4]u8 {
-        var ret = [4]u8{
+        const ret = [4]u8{
             @as(u8, @truncate(src & 0xff)),
             @as(u8, @truncate((src >> 8) & 0xff)),
             @as(u8, @truncate((src >> 16) & 0xff)),
@@ -131,7 +131,7 @@ pub const CmdResp = struct {
     pub fn setDataByArrayU32(self: *Self, src: [4]u32) void {
         var idx: u8 = 1;
         for (src) |v| {
-            var arr = _u32_to_array_u8(v);
+            const arr = _u32_to_array_u8(v);
             for (arr) |byte| {
                 self.data[idx] = byte;
                 idx += 1;

@@ -12,11 +12,11 @@ pub fn emmc_reinit(host: BHost, ocr: u32, rca: u16) anyerror!ds.EmmcCardInfo {
 
     // Step2
     // Do voltage identification
-    var rocr = try _stage_do_voltage_identification(host, ocr);
+    const rocr = try _stage_do_voltage_identification(host, ocr);
 
     // Step3
     // Fetch card CID
-    var cid = _stage_fetch_cid(host);
+    const cid = _stage_fetch_cid(host);
 
     // Step4
     // Set card RCA
@@ -116,10 +116,10 @@ test "_stage_do_voltage_identification" {
         var _mockhost = mockHostT{
             .data4 = 0x80,
         };
-        var mockhost = _mockhost.GetHost();
+        const mockhost = _mockhost.GetHost();
 
-        var result = _stage_do_voltage_identification(mockhost, 0);
-        var hasError = if (result) |_| false else |_| true;
+        const result = _stage_do_voltage_identification(mockhost, 0);
+        const hasError = if (result) |_| false else |_| true;
 
         try std.testing.expect(!hasError);
     }
@@ -129,7 +129,7 @@ test "_stage_do_voltage_identification" {
         var _mockhost = mockHostT{
             .data4 = 0x7f,
         };
-        var mockhost = _mockhost.GetHost();
+        const mockhost = _mockhost.GetHost();
         try std.testing.expectError(fv.EmmcError.OCRTimeout, _stage_do_voltage_identification(mockhost, 0));
     }
 }
@@ -139,9 +139,9 @@ test "emmc_reinit" {
     // const std = @import("std");
 
     var _mockhost = mockHostT{ .data4 = 0x80 };
-    var mockhost = _mockhost.GetHost();
+    const mockhost = _mockhost.GetHost();
 
-    var d = try emmc_reinit(mockhost, 0, 2);
+    const d = try emmc_reinit(mockhost, 0, 2);
     _ = d;
 
     // std.debug.print("einfo {any}\r\n", .{d});

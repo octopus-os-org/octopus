@@ -174,7 +174,7 @@ const uartT = struct {
 var _console_dev = uartT{};
 var console_dev = _console_dev.Dev();
 
-fn _init() void {
+export fn _init() void {
     // init uart
     const say = "Board Initialization...\r\n";
     _ = console_dev.write(say);

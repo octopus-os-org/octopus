@@ -4,7 +4,7 @@ const debug = @import("octopus").debug;
 /// octopus-init-section element type
 pub const OctopusInitElem = extern struct {
     name: [*]const u8,
-    init: *const fn () void,
+    init: *const fn () callconv(.C) void,
 };
 
 pub const InitmError = error{
@@ -54,20 +54,20 @@ pub fn do_init_default() anyerror!void {
 
 test "do_init_list" {
     const std = @import("std");
-    var arrElem1 = OctopusInitElem{ .name = "e1", .init = _test_foo };
-    var arrElem2 = OctopusInitElem{ .name = "e2", .init = _test_foo };
+    const arrElem1 = OctopusInitElem{ .name = "e1", .init = _test_foo };
+    const arrElem2 = OctopusInitElem{ .name = "e2", .init = _test_foo };
 
     const arr = [_]OctopusInitElem{
         arrElem1,
         arrElem2,
     };
 
-    var _octopus_init_begin: usize = @intFromPtr(&arr[0]);
+    const _octopus_init_begin: usize = @intFromPtr(&arr[0]);
 
     // case: normal
     {
         _test_foo_count = 0;
-        var err = do_init_list(@ptrFromInt(_octopus_init_begin), arr.len * @sizeOf(OctopusInitElem));
+        const err = do_init_list(@ptrFromInt(_octopus_init_begin), arr.len * @sizeOf(OctopusInitElem));
         if (err) |_| {} else |e| {
             std.debug.print("unexpected error: {}\r\n", .{e});
             try std.testing.expect(false);
@@ -78,7 +78,7 @@ test "do_init_list" {
 
     // case: wrong size
     {
-        var err = do_init_list(@ptrFromInt(_octopus_init_begin), @sizeOf(OctopusInitElem) - 1);
+        const err = do_init_list(@ptrFromInt(_octopus_init_begin), @sizeOf(OctopusInitElem) - 1);
         try std.testing.expectError(InitmError.WrongSectionSize, err);
     }
 }

@@ -437,7 +437,7 @@ pub fn disable_irq(irq_id: u8) !void {
 fn _switch_irq(irq_id: u8, enable: bool) !void {
     const cii = constants.IrqId;
 
-    var val = @intFromBool(enable);
+    const val = @intFromBool(enable);
 
     switch (irq_id) {
         cii.UsageFault => {
@@ -457,7 +457,7 @@ fn _switch_irq(irq_id: u8, enable: bool) !void {
 }
 
 pub inline fn get_current_executing_irqid() u8 {
-    var sta = SCB.ICSR.read();
+    const sta = SCB.ICSR.read();
 
     return @as(u8, @truncate(sta.VECTACTIVE));
 }

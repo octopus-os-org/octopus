@@ -29,16 +29,16 @@ pub fn pinmgr_set_pin_mux(pin_id: u16, pin_mux: u8) !void {
         afVal = @as(u4, @truncate(pin_mux & 0xF));
     }
 
-    var gpioBaseAddr = base.gpiox_base_addr(pinid.get_group(pin_id));
-    var port = pinid.get_port(pin_id);
+    const gpioBaseAddr = base.gpiox_base_addr(pinid.get_group(pin_id));
+    const port = pinid.get_port(pin_id);
 
     // set pin mode
-    var mode_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_MODE_REG_AO));
+    const mode_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_MODE_REG_AO));
     var oldVal = mode_reg.*;
     mode_reg.* = base.modify_bits_of(u32, oldVal, 0x3, @as(u5, @truncate(2 * port)), modeVal);
 
     // set alternate
-    var af_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_AFRL_REG_AO + ((port / 8) * 4)));
+    const af_reg = @as(*u32, @ptrFromInt(gpioBaseAddr + GPIO_AFRL_REG_AO + ((port / 8) * 4)));
     oldVal = af_reg.*;
     af_reg.* = base.modify_bits_of(u32, oldVal, 0xF, @as(u5, @truncate(4 * (port % 8))), afVal);
 }

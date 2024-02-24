@@ -5,7 +5,7 @@ const idm = @import("idm.zig");
 /// Return null if the name is not found
 pub fn find(name: []const u8) ?*octopus.dev.Dev {
     if (idm.gidm.find(name)) |res| {
-        var dev: *octopus.dev.Dev = @alignCast(@ptrCast(res));
+        const dev: *octopus.dev.Dev = @alignCast(@ptrCast(res));
         return dev;
     }
 

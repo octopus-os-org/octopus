@@ -6,7 +6,7 @@ const nvic_ipr_base_addr = @as(*u32, @ptrFromInt(0xE000E400));
 /// config interrupt priority of irq_id (which is exception number)
 /// attention: can only handle irq_id [16..]
 pub fn set_irq_priority(irq_id: u8, val: u8) !void {
-    var irqn = try check_irq_id(irq_id);
+    const irqn = try check_irq_id(irq_id);
 
     write_reg_8bit_of_irqn(nvic_ipr_base_addr, irqn, val);
 }
@@ -14,7 +14,7 @@ pub fn set_irq_priority(irq_id: u8, val: u8) !void {
 // used for writing NVIC_IPR register
 inline fn write_reg_8bit_of_irqn(regbase: *u32, irqn: u8, val: u8) void {
     // using byte access
-    var h = irqn >> 3; // irqn / 8
+    const h = irqn >> 3; // irqn / 8
 
     @as([*c]u8, @ptrCast(regbase))[h] = val;
 }
@@ -22,7 +22,7 @@ inline fn write_reg_8bit_of_irqn(regbase: *u32, irqn: u8, val: u8) void {
 /// enable irq of irq_id (which is exception number)
 /// attention: can only handle irq_id [16..]
 pub fn enable_irq(irq_id: u8) !void {
-    var irqn = try check_irq_id(irq_id);
+    const irqn = try check_irq_id(irq_id);
 
     write_1_to_regbit_of_irqn(nvic_iser_base_addr, irqn);
 }
@@ -30,14 +30,14 @@ pub fn enable_irq(irq_id: u8) !void {
 /// disable irq of irq_id (which is exception number)
 /// attention: can only handle irq_id [16..]
 pub fn disable_irq(irq_id: u8) !void {
-    var irqn = try check_irq_id(irq_id);
+    const irqn = try check_irq_id(irq_id);
 
     write_1_to_regbit_of_irqn(nvic_icer_base_addr, irqn);
 }
 
 inline fn write_1_to_regbit_of_irqn(regbase: *u32, irqn: u8) void {
-    var h = irqn >> 5; // irqn / 32
-    var l = irqn & 0x1F; // irqn % 32
+    const h = irqn >> 5; // irqn / 32
+    const l = irqn & 0x1F; // irqn % 32
 
     // read
     var cur = @as([*c]u32, regbase)[h];

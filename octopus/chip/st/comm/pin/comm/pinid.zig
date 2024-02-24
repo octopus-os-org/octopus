@@ -25,10 +25,10 @@ pub fn pin_id_from_hrs(hrs: []const u8) !u16 {
         return error.Failure;
     }
 
-    var group: u8 = hrs[0] - 'A';
-    var port: u8 = (hrs[1] - '0') * 10 + (hrs[2] - '0');
+    const group: u8 = hrs[0] - 'A';
+    const port: u8 = (hrs[1] - '0') * 10 + (hrs[2] - '0');
 
-    var pin_id: u16 = (@as(u16, group) << 8) | @as(u16, port);
+    const pin_id: u16 = (@as(u16, group) << 8) | @as(u16, port);
 
     if (!is_valid_pin_id(pin_id)) {
         return error.Failure;
@@ -47,7 +47,7 @@ pub fn pin_id_to_hrs(pin_id: u16, hrs: []u8) ![]u8 {
         return error.Failure;
     }
 
-    var port: u8 = get_port(pin_id);
+    const port: u8 = get_port(pin_id);
 
     hrs[0] = 'A' + get_group(pin_id);
     hrs[1] = '0' + port / 10;

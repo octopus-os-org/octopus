@@ -30,7 +30,7 @@ pub fn init() anyerror!void {
     const heap_begin: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_begin");
     const heap_end: [*]u8 = @ptrFromInt(hs.@"os.heap_addr_end");
     const heap_len: u32 = @intFromPtr(heap_end) - @intFromPtr(heap_begin);
-    var buffer: *[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
+    const buffer: *[heap_len]u8 = @as(*[heap_len]u8, @ptrCast(heap_begin));
 
     debug.log("[octopus][dbg]: heap-info(begin,end,len): 0x{x} 0x{x} 0x{x}", .{ @intFromPtr(heap_begin), @intFromPtr(heap_end), heap_len });
     var _allocator = std.heap.FixedBufferAllocator.init(buffer);
