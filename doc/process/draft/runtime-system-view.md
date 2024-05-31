@@ -1,0 +1,1 @@
+like sysfs in linux, support a "runtime view" which show  all system informations 

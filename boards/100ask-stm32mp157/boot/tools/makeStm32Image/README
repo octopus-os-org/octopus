@@ -1,0 +1,4 @@
+mkimage.py -b program.bin -o program.stm32 -a 0xC0100000 -e 0xC0100000
+
+- -a is storage address
+- -e is load address

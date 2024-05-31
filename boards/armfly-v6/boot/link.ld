@@ -1,0 +1,91 @@
+/*
+ * This file is part of the libopencm3 project.
+ *
+ * Copyright (C) 2009 Uwe Hermann <uwe@hermann-uwe.de>
+ * Copyright (C) 2011 Stephen Caudle <scaudle@doceme.com>
+ *
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* Linker script for ST STM32F4DISCOVERY (STM32F407VG, 1024K flash, 128K RAM,
+ * 64K Core Coupled Memory RAM).
+ */
+
+/* Define the entry point of the output file. */
+ENTRY(_start)
+
+/* Define memory regions. */
+MEMORY
+{
+  ROM (rx)  : ORIGIN = 0x08000000, LENGTH = 2048K
+  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
+  CCMRAM (xrw) : ORIGIN = 0x10000000, LENGTH = 64K
+}
+
+/* Define sections. */
+SECTIONS
+{
+  .text : {
+    . = ALIGN(4);
+    KEEP(*(.vector_table)); /* Vector table and pretect this section from removing (the optmization will remove unrefered code) */
+    *(.text)  /* Program code */
+    *(.text*)  /* Program code */
+    *(.rodata)  /* Read-only data */
+    *(.rodata*)  /* Read-only data */
+
+    /** support for octopus initialization-mechanism */
+    . = ALIGN(4);
+    _octopus_init_begin = .;
+    KEEP(*(.octopus.init));
+    _octopus_init_end = .;
+
+    . = ALIGN(4);
+  } >ROM
+
+  _data_loadaddr = LOADADDR(.data);
+  .data : {
+    . = ALIGN(4);
+    _data_start = .;
+    *(.data)  /* Read-write non-zero initialized data */
+    *(.data*)  /* Read-write non-zero initialized data */
+    . = ALIGN(4);
+    _data_end = .;
+  } >RAM AT>ROM
+
+  .bss : {
+    . = ALIGN(4);
+    _bss_start = .;
+    *(.bss) /* Read-write zero initialized data */
+    *(.bss*) /* Read-write zero initialized data */
+    . = ALIGN(4);
+    _bss_end = .;
+  } > RAM 
+
+  .reserved(NOLOAD) : {
+    . = ALIGN(4);
+    _stack_low = .;
+    KEEP(*(.octopus.main_stack));
+    _stack_high = .;
+
+    . = ALIGN(4);
+    _heap_start = .;
+    KEEP(*(.octopus.heap));
+    _heap_end = .;
+  } > CCMRAM
+
+  /* _stack_start = ADDR(.bss) + SIZEOF(.bss); */
+  /* _stack_end = _stack_start + 0x1000; 64KB */
+}
+
+/* PROVIDE(_stack_end = ORIGIN(RAM) + LENGTH(RAM)); */
