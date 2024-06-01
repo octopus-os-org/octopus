@@ -4,7 +4,6 @@ const std = @import("std");
 const idm = @import("managers/idm/expose.zig");
 const initm = @import("managers/init/initm.zig");
 const context = @import("managers/context/context.zig");
-
 const debug = @import("debug.zig");
 
 extern fn main_stack_size() usize;
@@ -38,6 +37,8 @@ pub fn entry() void {
 // The entry of octopus
 fn init() anyerror!void {
     show_logo_info();
+
+    debug.printf("timestamp: {}\r\n", .{@import("buildinfo").timestamp});
 
     debug.puts("[octopus]: init ...\r\n");
 

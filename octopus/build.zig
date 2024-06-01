@@ -20,6 +20,11 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    // Inject buildinfo (timestamp) to octopus
+    const opt_buildinfo = b.addOptions();
+    opt_buildinfo.addOption(i64, "timestamp", std.time.timestamp());
+    octopus_module.addOptions("buildinfo", opt_buildinfo);
 
+    // Make namespace 'octopus' avaliable in octopus
     octopus_module.addImport("octopus", octopus_module);
 }
